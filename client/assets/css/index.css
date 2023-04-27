@@ -1,0 +1,19 @@
+#mainForm {
+    background-color: blue;
+    height: 300px;
+}
+
+#header {
+    margin-left: 400px;
+}
+
+#profile {
+    padding-left: 600px;
+    margin-top: -50px;
+    margin-left: 200px;
+}
+
+#profileText:hover {
+    width: 90px;
+    background-color: red;
+}

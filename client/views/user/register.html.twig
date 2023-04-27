@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register page</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script src="../client/assets/js/index.js"></script>
+</head>
+<body>
+<form method="post" action="http://localhost/kursach/server/user/register" onsubmit="registerUser(event)">
+    <label>First name</label>  <input type="text" name="firstName"> <br><br>
+    <label>Second name</label>  <input type="text" name="secondName"> <br><br>
+    <label>Last name</label>  <input type="text" name="lastName"> <br><br>
+    <label>Email</label>  <input type="text" name="email"> <br><br>
+    <label>Phone</label>  <input type="text" name="phone"> <br><br>
+    <label>Login</label>  <input type="text" name="login"> <br><br>
+    <label>Password</label>  <input type="password" name="password"> <br><br>
+    <input type="submit" value="Register">
+</form>
+<h3>Already have an account?</h3>
+<form method="post" action="http://localhost/kursach/server/login">
+    <input type="submit" value="Sign in">
+</form>
+</body>
+</html>

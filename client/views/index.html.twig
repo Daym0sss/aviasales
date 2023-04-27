@@ -1,0 +1,53 @@
+<html>
+    <head>
+        <title>Aviasales</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+        <script src="../client/assets/js/index.js"></script>
+    </head>
+    <body>
+        {% if user_id %}
+            <form method="post" action="http://localhost/kursach/server/user/logout" onsubmit="checkLogout(event)">
+                <input type="submit" value="Logout">
+            </form>
+
+            User: <input type="text" disabled value="{{ name }}"> <br><br>
+            <form method="post" action="http://localhost/kursach/server/user/profile">
+                <input type="submit" value="Profile">
+            </form>
+        {% else %}
+            <form method="post" action="http://localhost/kursach/server/login">
+                <input type="submit" value="Sign in">
+            </form>
+            <form method="post" action="http://localhost/kursach/server/register">
+                <input type="submit" value="Register">
+            </form>
+        {% endif %}
+        <br><br>
+        <form method="post" action="http://localhost/kursach/server/flight/getFlightsByUserChoice">
+            <label>Departure point</label>
+            <select name="departurePoint">
+                <option value="none">None</option>
+                {% for departurePoint in departurePoints %}
+                    <option value="{{ departurePoint }}">{{ departurePoint }}</option>
+                {% endfor %}
+            </select> <br><br>
+            <label>Arrival point</label>
+            <select name="arrivalPoint">
+                <option value="none">None</option>
+                {% for arrivalPoint in arrivalPoints %}
+                    <option value="{{ arrivalPoint }}">{{ arrivalPoint }}</option>
+                {% endfor %}
+            </select> <br><br>
+            <label>Departure date</label>  <input type="date" name="departureDate" required> <br><br>
+            <label>Adults count</label>  <input type="number" name="defaultCount" value="1"> <br><br>
+            <label>Children count</label>  <input type="number" name="childCount" value="0"> <br><br>
+            <label>Babies count</label>  <input type="number" name="babyCount" value="0"> <br><br>
+
+            <label>Econom class</label>  <input type="radio" name="class" value="econom" checked> <br><br>
+            <label>Comfort class</label>  <input type="radio" name="class" value="comfort"> <br><br>
+            <label>Business class</label>  <input type="radio" name="class" value="business"> <br><br>
+            <input type="hidden" value="{{ user_id }}">
+            <input type="submit" value="Find">
+        </form>
+    </body>
+</html>

@@ -1,0 +1,62 @@
+<html>
+    <head>
+        <title>Enter your personal data</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+        <script src="../../client/assets/js/index.js"></script>
+    </head>
+    <body onload="loadFreePlaces({{ flight.trip_id }}, '{{ class }}')">
+        <h2>Flight information</h2>
+        <table border="1" style="text-align: center">
+            <tr>
+                <th>Departure point</th>
+                <th>Departure date</th>
+                <th>Departure time</th>
+                <th>Arrival point</th>
+                <th>Arrival date</th>
+                <th>Arrival time</th>
+                <th>Aviacompany name</th>
+            </tr>
+            <tr>
+                <td>{{ flight.departure_country }} / {{ flight.departure_city }} / {{ flight.departure_airport }} / {{ flight.departure_terminal }}</td>
+                <td>{{ flight.departure_date }}</td>
+                <td>{{ flight.departure_time }}</td>
+                <td>{{ flight.arrival_country }} / {{ flight.arrival_city }} / {{ flight.arrival_airport }} / {{ flight.arrival_terminal }}</td>
+                <td>{{ flight.arrival_date }}</td>
+                <td>{{ flight.arrival_time }}</td>
+                <td>{{ flight.aviaCompany_name }}</td>
+            </tr>
+        </table>
+        <br><br>
+        <h2>Passangers information</h2>
+        <form onsubmit="checkForm(event)" method="post" action="http://localhost/kursach/server/user/registerForFlight">
+            {% set counter = 1 %}
+            <input type="hidden" name="trip_id" value="{{ flight.trip_id }}">
+            <input type="hidden" name="user_id" value="{{ user_id }}">
+            <input type="hidden" name="class" value="{{ class }}">
+            {% for passanger in passangers %}
+                {% if passanger.type == "default" %}
+                    <label>Passanger adult</label> <br><br>
+                {% else %}
+                    <label>Passanger {{ passanger.type }}</label> <br><br>
+                {% endif %}
+
+                <input type="hidden" name="passanger_type{{ counter }}" value="{{ passanger.type }}">
+                <label>First name</label>  <input type="text" name="firstName{{ counter }}"> <br><br>
+                <label>Second name</label><input type="text" name="secondName{{ counter }}"> <br><br>
+                <label>Last name</label><input type="text" name="lastName{{ counter }}"> <br><br>
+                <label>Passport number</label><input type="text" name="passport_num{{ counter }}"> <br><br>
+                <label>Add luggage(+ {{ flight.luggage_price }} BYN)</label><input type="checkbox" name="hasLuggage{{ counter }}"> <br><br>
+                <label>Place number</label>
+                <select name="place_letter{{ counter }}" id="letter{{ counter }}">
+
+                </select>
+                <select name="place_num{{ counter }}" id="num{{ counter }}">
+
+                </select>
+                {% set counter = counter + 1 %}
+                <br><br>
+            {% endfor %}
+            <input type="submit" value="Buy ticket">
+        </form>
+    </body>
+</html>

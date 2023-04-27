@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Your profile</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script src="../../client/assets/js/index.js"></script>
+</head>
+<body onload="loadAllFlights()">
+    <h2>User informtaion</h2>
+    Login: {{ user.login }} <br>
+    First name: {{ user.firstName }} <br>
+    Second name: {{ user.secondName }} <br>
+    Last name: {{ user.lastName }} <br>
+    Phone: {{ user.phone }} <br>
+    Email: {{ user.email }} <br>
+
+    <br>
+    <form method="post" action="http://localhost/kursach/server/getUserProfileEditPage">
+        <input type="hidden" value="{{ user.user_id }}">
+        <input type="submit" value="Change user information">
+    </form>
+
+    <h2>Booked flights information</h2>
+    <label>Period</label>  <select onchange="changeFlightPeriod(event)">
+        <option value="all" selected>All flights</option>
+        <option value="previous">Previous flights</option>
+        <option value="future">Current flights</option>
+    </select>
+    <div id="flightsInformation">
+
+    </div>
+</body>
+</html>

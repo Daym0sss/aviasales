@@ -1,0 +1,57 @@
+Roles:
+    - role_id (1 - admin, 2 - guest, 3 - customer)
+    - role_name
+
+Users:
+    - user_id
+    - firstName
+    - secondName
+    - lastName
+    - email
+    - phone
+
+Trips:
+    - trip_id
+    - departure_country
+    - arrival_country
+    - departure_city
+    - arrival_city
+    - departure_airport
+    - arrival_airport
+    - departure_terminal
+    - arrival_terminal
+    - departure_date
+    - arrival_date
+    - departure_time
+    - arrival_time
+    - luggage_price
+    - general_econom_places_count
+    - left_econom_places_count
+    - econom_place_price_default
+    - econom_place_price_child
+    - econom_place_price_baby
+    - general_comfort_places_count
+    - left_comfort_places_count
+    - comfort_place_price_default
+    - comfort_place_price_child
+    - comfort_place_price_baby
+    - general_business_places_count
+    - left_business_places_count
+    - business_place_price_default
+    - business_place_price_child
+    - business_place_price_baby
+    - aviaCompany_name
+
+Passangers:
+    - passanger_id
+    - user_id
+    - trip_id
+    - place_num
+    - is_default
+    - is_child
+    - is_baby
+    - has_luggage
+    - passport_num
+    - firstName
+    - secondName
+    - lastName

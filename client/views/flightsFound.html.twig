@@ -1,0 +1,48 @@
+<html>
+    <head>
+        <title>Look what we got for you</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+        <script src="../../client/assets/js/index.js"></script>
+    </head>
+    <body>
+        {% if flights %}
+            <table border="1" style="text-align: center">
+                <tr>
+                    <th>Departure point</th>
+                    <th>Departure date</th>
+                    <th>Departure time</th>
+                    <th>Arrival point</th>
+                    <th>Arrival date</th>
+                    <th>Arrival time</th>
+                    <th>Flight price</th>
+                    <th>Aviacompany name</th>
+                </tr>
+            {% for flight in flights%}
+                <tr>
+                    <td>{{ flight.departure_country }} / {{ flight.departure_city }} / {{ flight.departure_airport }} / Terminal {{ flight.departure_terminal }}</td>
+                    <td>{{ flight.departure_date }}</td>
+                    <td>{{ flight.departure_time }}</td>
+                    <td>{{ flight.arrival_country }} / {{ flight.arrival_city }} / {{ flight.arrival_airport }} / Terminal {{ flight.arrival_terminal }}</td>
+                    <td>{{ flight.arrival_date }}</td>
+                    <td>{{ flight.arrival_time }}</td>
+                    <td>{{ flight.requested_price }} BYN</td>
+                    <td>{{ flight.aviaCompany_name }}</td>
+                    <td>
+                        <form method="post" action="http://localhost/kursach/server/user/chooseATicket" onsubmit="checkIfAuthorized(event, {{ user_id }})">
+                            <input type="hidden" name="class" value="{{ class }}">
+                            <input type="hidden" name="defaultCount" value="{{ defaultCount }}">
+                            <input type="hidden" name="childCount" value="{{ childCount }}">
+                            <input type="hidden" name="babyCount" value="{{ babyCount }}">
+                            <input type="hidden" name="trip_id" value="{{ flight.trip_id }}">
+                            <input type="hidden" name="user_id" value="{{ user_id }}">
+                            <input type="submit" value="Choose a ticket">
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+            </table>
+        {% else %}
+            No flights have been found by your request
+        {% endif %}
+    </body>
+</html>
