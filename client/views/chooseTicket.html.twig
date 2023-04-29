@@ -39,23 +39,16 @@
                 {% else %}
                     <label>Passanger {{ passanger.type }}</label> <br><br>
                 {% endif %}
-
                 <input type="hidden" name="passanger_type{{ counter }}" value="{{ passanger.type }}">
                 <label>First name</label>  <input type="text" name="firstName{{ counter }}"> <br><br>
                 <label>Second name</label><input type="text" name="secondName{{ counter }}"> <br><br>
                 <label>Last name</label><input type="text" name="lastName{{ counter }}"> <br><br>
                 <label>Passport number</label><input type="text" name="passport_num{{ counter }}"> <br><br>
                 <label>Add luggage(+ {{ flight.luggage_price }} BYN)</label><input type="checkbox" name="hasLuggage{{ counter }}"> <br><br>
-                <label>Place number</label>
-                <select name="place_letter{{ counter }}" id="letter{{ counter }}">
-
-                </select>
-                <select name="place_num{{ counter }}" id="num{{ counter }}">
-
-                </select>
                 {% set counter = counter + 1 %}
                 <br><br>
             {% endfor %}
+            <input type="hidden" name="passangersCount" value="{{ counter }}">
             <input type="submit" value="Buy ticket">
         </form>
     </body>

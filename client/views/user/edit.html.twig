@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Your profile</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script src="../../client/assets/js/index.js"></script>
+</head>
+<body>
+    <h2>User edit page</h2>
+
+    <form method="post" action="http://localhost/kursach/server/user/update">
+        <label>First name: </label><input type="text" name="firstName" value="{{ user.firstName }}">
+        <br><br>
+        <label>Second name: </label><input type="text" name="secondName" value="{{ user.secondName }}">
+        <br><br>
+        <label>Last name: </label><input type="text" name="lastName" value="{{ user.lastName }}">
+        <br><br>
+        <label>Email: </label><input type="text" name="email" value="{{ user.email }}">
+        <br><br>
+        <label>Mobile phone number: </label><input type="text" name="phone" value="{{ user.phone }}">
+        <br><br>
+        <label>Login: </label><input type="text" name="login" value="{{ user.login }}" disabled>
+        <br><br>
+        <label>Password: </label><input type="text" name="password" value="{{ user.password }}" disabled>
+        <br><br>
+        <input type="hidden" name="user_id" value="{{ user.user_id }}">
+        <input type="submit" value="Update">
+    </form>
+</body>
+</html>

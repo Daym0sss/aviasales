@@ -65,27 +65,37 @@ class Passanger
     {
         if ($passanger_params['type'] == 'default')
         {
-            $is_default = true;
-            $is_child = false;
-            $is_baby = false;
+            $is_default = 1;
+            $is_child = 0;
+            $is_baby = 0;
         }
         else if ($passanger_params['type'] == 'child')
         {
-            $is_default = false;
-            $is_child = true;
-            $is_baby = false;
+            $is_default = 0;
+            $is_child = 1;
+            $is_baby = 0;
         }
         else
         {
-            $is_default = false;
-            $is_child = false;
-            $is_baby = true;
+            $is_default = 0;
+            $is_child = 0;
+            $is_baby = 1;
         }
+
+        if ($passanger_params['has_luggage'])
+        {
+            $passanger_params['has_luggage'] = 1;
+        }
+        else
+        {
+            $passanger_params['has_luggage'] = 0;
+        }
+
         $connection = Database::getInstance();
-        $sql = 'INSERT INTO passangers(user_id, trip_id, place_num, is_default, is_child, is_baby, has_luggage, firstName, secondName, lastName, passport_num, class)'
-            . 'VALUES(' . $passanger_params['user_id'] . ', ' . $passanger_params['trip_id'] . ', "' . $passanger_params['place_num'] . '", ' . $is_default . ', '
-            . $is_child . ', ' . $is_baby . ', ' . $passanger_params['has_luggage'] . ', "' . $passanger_params['firstName'] . '", "' . $passanger_params['secondName']
-            . '", "' . $passanger_params['lastName'] . '", "' . $passanger_params['passport_num'] . '", "' . $passanger_params['class'] . '")';
+        $sql = "INSERT INTO passangers(user_id, trip_id, place_num, is_default, is_child, is_baby, has_luggage, firstName, secondName, lastName, passport_num, class) "
+            . "VALUES(" . $passanger_params['user_id'] . ", " . $passanger_params['trip_id'] . ", \"" . $passanger_params['place_num'] . "\", " . $is_default . ", "
+            . $is_child . ", " . $is_baby . ", " . $passanger_params['has_luggage'] . ", \"" . $passanger_params['firstName'] . "\", \"" . $passanger_params['secondName']
+            . "\", \"" . $passanger_params['lastName'] . "\", \"" . $passanger_params['passport_num'] . "\", \"" . $passanger_params['class'] . "\")";
 
         $connection->query($sql);
     }

@@ -5,6 +5,7 @@ namespace app;
 use controllers\UserController;
 use controllers\FlightController;
 use controllers\AdminController;
+use models\User;
 
 require $_SERVER['DOCUMENT_ROOT'] . '/kursach/server/controllers/UserController.php';
 require $_SERVER['DOCUMENT_ROOT'] . '/kursach/server/controllers/FlightController.php';
@@ -27,6 +28,16 @@ class Router
         [
             'controller' => UserController::class,
             'method' => 'index'
+        ],
+        '/user/edit' =>
+        [
+            'controller' => UserController::class,
+            'method' => 'edit'
+        ],
+        '/user/update' =>
+        [
+            'controller' => UserController::class,
+            'method' => 'update'
         ],
         '/user/profile' =>
         [

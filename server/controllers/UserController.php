@@ -135,7 +135,7 @@ class UserController
     public function getBookedFlights()
     {
         session_start();
-        /*if ($_POST['period'] == "all")
+        if ($_POST['period'] == "all")
         {
             $sign = null;
         }
@@ -146,8 +146,8 @@ class UserController
         else
         {
             $sign = ">";
-        }*/
-        $flights = User::getFlights($_SESSION['user_id'], "all");
+        }
+        $flights = User::getFlights($_SESSION['user_id'], $sign);
         session_write_close();
 
         echo json_encode(['flights' => $flights]);
@@ -216,8 +216,36 @@ class UserController
 
     public function registerForFlight()
     {
-        $counter = 1;
-        while(isset($_POST['firstName' . $counter]))
+        $passangersPlaces = [];
+        $freePlaces = Trip::getFreePlaces($_POST['trip_id'], $_POST['class']);
+        $firstPassangerPlace = $freePlaces[0];
+        $passangersPlaces []= $firstPassangerPlace;
+        $placeNumber = $freePlaces[0][1];
+        $letters = ["A", "B", "C", "D"];
+        $letter = $freePlaces[0][0];
+
+        for($i = 1;$i < $_POST['passangersCount'] - 1;$i++)
+        {
+            if ($placeNumber == 4)
+            {
+                $placeNumber = 1;
+                if (array_search($letter, $letters) == 3)
+                {
+                    $letter = $letters[0];
+                }
+                else
+                {
+                    $letter = $letters[array_search($letter, $letters) + 1];
+                }
+            }
+            else
+            {
+                $placeNumber++;
+            }
+            $passangersPlaces []= $letter . $placeNumber;
+        }
+
+        for($counter = 1;$counter < $_POST['passangersCount'];$counter++)
         {
             $passanger_params = [];
             $passanger_params['firstName'] = $_POST['firstName' . $counter];
@@ -226,26 +254,43 @@ class UserController
             $passanger_params['passport_num'] = $_POST['passport_num' . $counter];
             $passanger_params['type'] = $_POST['passanger_type' . $counter];
             $passanger_params['has_luggage'] = isset($_POST['hasLuggage' . $counter]);
-            $passanger_params['user_id'] = $_POST['user_id'];
-            $passanger_params['trip_id'] = $_POST['trip_id'];
-            $passanger_params['place_num'] = $_POST['place_letter' . $counter] . $_POST['place_num' . $counter];
+            $passanger_params['user_id'] = (int) $_POST['user_id'];
+            $passanger_params['trip_id'] = (int) $_POST['trip_id'];
+            $passanger_params['place_num'] = $passangersPlaces[$counter - 1];
             $passanger_params['class'] = $_POST['class'];
             Passanger::addPassanger($passanger_params);
-            $counter++;
         }
-        $user = User::getUserById($_POST['user_id']);
 
-        Trip::reduceFreePlacesCount($_POST['trip_id'], $counter - 1, $_POST['class']);
-        $counter = 1;
-        while(isset($_POST['place_nun' . $counter]))
+        Trip::reduceFreePlacesCount($_POST['trip_id'], $_POST['passangersCount'], $_POST['class']);
+
+        for($counter = 1;$counter < $_POST['passangersCount'];$counter++)
         {
             Trip::takeFlightPlace([
                 'trip_id' => $_POST['trip_id'],
                 'class' => $_POST['class'],
-                'place_num' => $_POST['place_num' . $counter]
+                'place_num' => $passangersPlaces[$counter - 1]
             ]);
-            $counter++;
         }
+
+        echo json_encode(['message' => 'You have been registered for the flight']);
+    }
+
+    public function edit()
+    {
+        $user_id = $_POST['user_id'];
+
+        $loader = new FilesystemLoader($_SERVER['DOCUMENT_ROOT'] . '/kursach/client/views/user');
+        $twig = new Environment($loader);
+        $template = $twig->load('edit.html.twig');
+        echo $template->render([
+            'user' => User::getUserById($user_id)
+        ]);
+    }
+
+    public function update()
+    {
+        User::updateUser($_POST);
+        header('Location: http://localhost/kursach/server/user/profile');
     }
 
     public static function getAllUsers()

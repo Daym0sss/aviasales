@@ -16,8 +16,8 @@
     Email: {{ user.email }} <br>
 
     <br>
-    <form method="post" action="http://localhost/kursach/server/getUserProfileEditPage">
-        <input type="hidden" value="{{ user.user_id }}">
+    <form method="post" action="http://localhost/kursach/server/user/edit">
+        <input type="hidden" name="user_id" value="{{ user.user_id }}">
         <input type="submit" value="Change user information">
     </form>
 
@@ -25,8 +25,10 @@
     <label>Period</label>  <select onchange="changeFlightPeriod(event)">
         <option value="all" selected>All flights</option>
         <option value="previous">Previous flights</option>
-        <option value="future">Current flights</option>
+        <option value="future">Future flights</option>
     </select>
+    <br><br>
+
     <div id="flightsInformation">
 
     </div>

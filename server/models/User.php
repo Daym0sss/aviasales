@@ -112,22 +112,21 @@ class User
         {
             if (!isset($flights[$passanger['trip_id']]))
             {
-                $flights[$passanger['trip_id']] []= [];
+                $flights[$passanger['trip_id']] = [];
             }
         }
 
         foreach ($flights as $trip_id => $flight)
         {
-            $flight['trip_information'] = Trip::getTrip($trip_id);
+            $flights[$trip_id]['trip_information'] = Trip::getTrip($trip_id);
         }
 
         foreach ($flights as $trip_id => $flight)
         {
-            $flight['passangers_information'] = Passanger::getPassangersInfo($trip_id);
+            $flights[$trip_id]['passangers_information'] = Passanger::getPassangersInfo($trip_id);
         }
 
         $currentDate = strtotime(\date("Y-m-d"));
-
         if ($sign == null)
         {
             return $flights;
@@ -160,6 +159,20 @@ class User
 
             return $result;
         }
+    }
+
+    public static function updateUser($data)
+    {
+        $firstName = $_POST['firstName'];
+        $secondName = $_POST['secondName'];
+        $lastName = $_POST['lastName'];
+        $phone = $_POST['phone'];
+        $email = $_POST['email'];
+        $user_id = $_POST['user_id'];
+
+        $connection = Database::getInstance();
+        $sql = "UPDATE users SET firstName = \"" . $firstName . "\", secondName = \"" . $secondName . "\", lastName = \"" . $lastName . "\", phone = \"" . $phone . "\", email = \"" . $email . "\" WHERE user_id = " . $user_id;
+        $connection->query($sql);
     }
 
     public static function has_access($user_id)
