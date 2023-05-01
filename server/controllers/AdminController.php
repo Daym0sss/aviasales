@@ -5,6 +5,8 @@ namespace controllers;
 
 use models\Trip;
 use models\User;
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
 
 class AdminController
 {
@@ -15,18 +17,35 @@ class AdminController
         {
             if (User::has_access($_SESSION['user_id']))
             {
-                //redirect to admin main
+                $loader = new FilesystemLoader($_SERVER['DOCUMENT_ROOT'] . '/kursach/client/views/admin');
+                $twig = new Environment($loader);
+                $template = $twig->load('main.html.twig');
+                echo $template->render([
+
+                ]);
             }
             else
             {
-                //redirect to user main
+                $controller = new UserController();
+                $controller->index();
             }
         }
         else
         {
-            //redirect to guest main
+            header('Location: http://localhost/kursach/server/');
         }
         session_write_close();
+    }
+
+    public function getTrips()
+    {
+        $trips = Trip::getAllTrips();
+        $loader = new FilesystemLoader($_SERVER['DOCUMENT_ROOT'] . '/kursach/client/views/admin');
+        $twig = new Environment($loader);
+        $template = $twig->load('trips.html.twig');
+        echo $template->render([
+            'trips' => $trips
+        ]);
     }
 
     /*
@@ -115,6 +134,11 @@ class AdminController
     {
         Trip::updateTrip($_POST);
         //redirect to admin trips list
+    }
+
+    public function getUsers()
+    {
+
     }
 
     /*

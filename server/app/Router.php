@@ -99,6 +99,11 @@ class Router
              'controller' => AdminController::class,
              'method' => 'main'
          ],
+         '/admin/trips' =>
+         [
+             'controller' => AdminController::class,
+             'method' => 'getTrips'
+         ],
          '/admin/addTrip' =>
          [
              'controller' => AdminController::class,
@@ -118,6 +123,11 @@ class Router
          [
              'controller' => AdminController::class,
              'method' => 'deleteTrip'
+         ],
+         '/admin/users' =>
+         [
+             'controller' => AdminController::class,
+             'method' => 'getUsers'
          ],
          '/admin/changeUserRole' =>
          [

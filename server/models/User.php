@@ -177,8 +177,8 @@ class User
 
     public static function has_access($user_id)
     {
-        $user = self::getUserById($user_id);
-        if ($user->role_id != 1)
+        $user = User::getUserById($user_id);
+        if ($user['role_id'] != 1)
         {
             return false;
         }

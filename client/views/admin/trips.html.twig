@@ -1,0 +1,92 @@
+<html>
+<head>
+    <title>Aviasales</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script src="../../client/assets/js/index.js"></script>
+</head>
+<body>
+<h2>Trips information</h2>
+    <table border="1">
+        <tr>
+            <th>Actions</th>
+            <th>Trip ID</th>
+            <th>Departure country</th>
+            <th>Departure city</th>
+            <th>Departure airport</th>
+            <th>Departure terminal</th>
+            <th>Departure date</th>
+            <th>Departure time</th>
+            <th>Arrival country</th>
+            <th>Arrival city</th>
+            <th>Arrival airport</th>
+            <th>Arrival terminal</th>
+            <th>Arrival date</th>
+            <th>Arrival time</th>
+            <th>Luggage price</th>
+            <th>General econom places count</th>
+            <th>Left econom places count</th>
+            <th>Econom place price for adult</th>
+            <th>Econom place price for child</th>
+            <th>Econom place price for baby</th>
+            <th>General comfort places count</th>
+            <th>Left comfort places count</th>
+            <th>Comfort place price for adult</th>
+            <th>Comfort place price for child</th>
+            <th>Comfort place price for baby</th>
+            <th>General business places count</th>
+            <th>Left business places count</th>
+            <th>Business place price for adult</th>
+            <th>Business place price for child</th>
+            <th>Business place price for baby</th>
+            <th>Aviacompany name</th>
+        </tr>
+        {% for trip in trips %}
+            <th>
+                <form method="post" action="http://localhost/kursach/server/admin/editTrip">
+                    <input type="hidden" value="{{ trip.trip_id }}">
+                    <input type="submit" value="Edit trip">
+                </form>
+                <form method="post" action="http://localhost/kursach/server/admin/deleteTrip">
+                    <input type="hidden" value="{{ trip.trip_id }}">
+                    <input type="submit" value="Delete trip">
+                </form>
+            </th>
+            <th>{{ trip.trip_id }}</th>
+            <th>{{ trip.departure_country }}</th>
+            <th>{{ trip.departure_city }}</th>
+            <th>{{ trip.departure_airport }}</th>
+            <th>{{ trip.departure_terminal }}</th>
+            <th>{{ trip.departure_date }}</th>
+            <th>{{ trip.departure_time }}</th>
+            <th>{{ trip.arrival_country }}</th>
+            <th>{{ trip.arrival_city }}</th>
+            <th>{{ trip.arrival_airport }}</th>
+            <th>{{ trip.arrival_terminal }}</th>
+            <th>{{ trip.arrival_date }}</th>
+            <th>{{ trip.arrival_time }}</th>
+            <th>{{ trip.luggage_price }} BYN</th>
+            <th>{{ trip.general_econom_places_count }}</th>
+            <th>{{ trip.left_econom_places_count }}</th>
+            <th>{{ trip.econom_place_price_default }}</th>
+            <th>{{ trip.econom_place_price_child }}</th>
+            <th>{{ trip.econom_place_price_baby }}</th>
+            <th>{{ trip.general_comfort_places_count }}</th>
+            <th>{{ trip.left_comfort_places_count }}</th>
+            <th>{{ trip.comfort_place_price_default }}</th>
+            <th>{{ trip.comfort_place_price_child }}</th>
+            <th>{{ trip.comfort_place_price_baby }}</th>
+            <th>{{ trip.general_business_places_count }}</th>
+            <th>{{ trip.left_business_places_count }}</th>
+            <th>{{ trip.business_place_price_default }}</th>
+            <th>{{ trip.business_place_price_child }}</th>
+            <th>{{ trip.business_place_price_baby }}</th>
+            <th>{{ trip.aviaCompany_name }}</th>
+        {% endfor %}
+    </table>
+
+    <h2>Create new trip</h2>
+    <form>
+        <input type="submit" value="Create trip">
+    </form>
+</body>
+</html>
