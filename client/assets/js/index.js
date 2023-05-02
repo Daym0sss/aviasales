@@ -130,7 +130,7 @@ function drawBookedFlights(flights, keys)
 {
     var i = 0;
     var body = "";
-    body += "<table border='1'><tr><th>#</th><th>Departure</th><th>Arrival</th><th>Passangers</th><th>Flight class : Price</th></tr>";
+    body += "<table border='1'><tr><th>#</th><th>Departure</th><th>Arrival</th><th>Passangers</th><th>Flight class : Price</th><th>Actions</th></tr>";
     for(i = 0;i < keys.length;i++)
     {
         var flight = flights[keys[i]];
@@ -200,7 +200,8 @@ function drawBookedFlights(flights, keys)
         var flight_class = passangers[0].class;
         flight_class = flight_class[0].toUpperCase() + flight_class.substr(1);
         body += "<td>" + flight_class + ": " + result_price + " BYN" + "</td>";
-
+        body += "<td> <form method='post' action='http://localhost/kursach/server/user/refuseFromFlight' onsubmit='confirmFlightRefuse(event)'> <input type='hidden' value='" + flight.trip_information.trip_id + "' name='trip_id'> <input type='hidden' value='" + flight.passangers_information[0].user_id + "' name='user_id'> <input type='submit' value='Refuse'></form> </td>";
+        console.log(flight);
         body += "<tr>";
     }
     body += "</table>";
@@ -231,4 +232,24 @@ function changeFlightPeriod(event)
             }
         }
     });
+}
+
+function confirmTripDelete(event)
+{
+    event.preventDefault();
+    var answer = confirm("Are you sure you want to delete this trip?");
+    if (answer)
+    {
+        event.currentTarget.submit();
+    }
+}
+
+function confirmFlightRefuse(event)
+{
+    event.preventDefault();
+    var answer = confirm("Are you sure you want to refuse from this trip?");
+    if (answer)
+    {
+        event.currentTarget.submit();
+    }
 }

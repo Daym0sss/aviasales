@@ -261,7 +261,7 @@ class UserController
             Passanger::addPassanger($passanger_params);
         }
 
-        Trip::reduceFreePlacesCount($_POST['trip_id'], $_POST['passangersCount'], $_POST['class']);
+        Trip::reduceFreePlacesCount($_POST['trip_id'], $_POST['passangersCount'] - 1, $_POST['class']);
 
         for($counter = 1;$counter < $_POST['passangersCount'];$counter++)
         {
@@ -290,6 +290,12 @@ class UserController
     public function update()
     {
         User::updateUser($_POST);
+        header('Location: http://localhost/kursach/server/user/profile');
+    }
+
+    public function refuseFromFlight()
+    {
+        User::refuseFromFlight($_POST);
         header('Location: http://localhost/kursach/server/user/profile');
     }
 

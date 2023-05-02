@@ -175,6 +175,37 @@ class User
         $connection->query($sql);
     }
 
+    public static function refuseFromFlight($data)
+    {
+        $connection = Database::getInstance();
+        $sql = "SELECT * FROM passangers WHERE trip_id = " . $_POST['trip_id'] . " AND user_id = " . $_POST['user_id'];
+        $passangers = $connection->query($sql);
+        $passangers_count = 0;
+        $flight_class = "";
+        foreach ($passangers as $row)
+        {
+            $passangers_count++;
+            $flight_class = $row['class'];
+        }
+
+        $class_variable = "left_" . $flight_class . "_places_count";
+        $trip = Trip::getTrip($_POST['trip_id']);
+        $left_places_count = $trip[$class_variable];
+        $left_places_count += $passangers_count;
+
+        $sql = "UPDATE trips SET " . $class_variable . " = " . $left_places_count . " WHERE trip_id = " . $_POST['trip_id'];
+        $connection->query($sql);
+
+        foreach ($passangers as $passanger)
+        {
+            $sql = 'DELETE FROM flightPlaces WHERE class = "' . $flight_class . '" AND place_name = "' . $passanger['place_num'] . '" AND flight_id = ' . $_POST['trip_id'];
+            $connection->query($sql);
+        }
+
+        $sql = "DELETE FROM passangers WHERE user_id = " . $_POST['user_id'] . " AND trip_id = " . $_POST['trip_id'];
+        $connection->query($sql);
+    }
+
     public static function has_access($user_id)
     {
         $user = User::getUserById($user_id);

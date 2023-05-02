@@ -41,51 +41,79 @@
             <th>Aviacompany name</th>
         </tr>
         {% for trip in trips %}
-            <th>
-                <form method="post" action="http://localhost/kursach/server/admin/editTrip">
-                    <input type="hidden" value="{{ trip.trip_id }}">
-                    <input type="submit" value="Edit trip">
-                </form>
-                <form method="post" action="http://localhost/kursach/server/admin/deleteTrip">
-                    <input type="hidden" value="{{ trip.trip_id }}">
-                    <input type="submit" value="Delete trip">
-                </form>
-            </th>
-            <th>{{ trip.trip_id }}</th>
-            <th>{{ trip.departure_country }}</th>
-            <th>{{ trip.departure_city }}</th>
-            <th>{{ trip.departure_airport }}</th>
-            <th>{{ trip.departure_terminal }}</th>
-            <th>{{ trip.departure_date }}</th>
-            <th>{{ trip.departure_time }}</th>
-            <th>{{ trip.arrival_country }}</th>
-            <th>{{ trip.arrival_city }}</th>
-            <th>{{ trip.arrival_airport }}</th>
-            <th>{{ trip.arrival_terminal }}</th>
-            <th>{{ trip.arrival_date }}</th>
-            <th>{{ trip.arrival_time }}</th>
-            <th>{{ trip.luggage_price }} BYN</th>
-            <th>{{ trip.general_econom_places_count }}</th>
-            <th>{{ trip.left_econom_places_count }}</th>
-            <th>{{ trip.econom_place_price_default }}</th>
-            <th>{{ trip.econom_place_price_child }}</th>
-            <th>{{ trip.econom_place_price_baby }}</th>
-            <th>{{ trip.general_comfort_places_count }}</th>
-            <th>{{ trip.left_comfort_places_count }}</th>
-            <th>{{ trip.comfort_place_price_default }}</th>
-            <th>{{ trip.comfort_place_price_child }}</th>
-            <th>{{ trip.comfort_place_price_baby }}</th>
-            <th>{{ trip.general_business_places_count }}</th>
-            <th>{{ trip.left_business_places_count }}</th>
-            <th>{{ trip.business_place_price_default }}</th>
-            <th>{{ trip.business_place_price_child }}</th>
-            <th>{{ trip.business_place_price_baby }}</th>
-            <th>{{ trip.aviaCompany_name }}</th>
+            <tr>
+                <th>
+                    <form method="post" action="http://localhost/kursach/server/admin/editTrip">
+                        <input type="hidden" name="trip_id" value="{{ trip.trip_id }}">
+                        <input type="submit" value="Edit trip">
+                    </form>
+                    <form method="post" action="http://localhost/kursach/server/admin/deleteTrip" onsubmit="confirmTripDelete(event)">
+                        <input type="hidden" name="trip_id" value="{{ trip.trip_id }}">
+                        <input type="submit" value="Delete trip">
+                    </form>
+                </th>
+                <th>{{ trip.trip_id }}</th>
+                <th>{{ trip.departure_country }}</th>
+                <th>{{ trip.departure_city }}</th>
+                <th>{{ trip.departure_airport }}</th>
+                <th>{{ trip.departure_terminal }}</th>
+                <th>{{ trip.departure_date }}</th>
+                <th>{{ trip.departure_time }}</th>
+                <th>{{ trip.arrival_country }}</th>
+                <th>{{ trip.arrival_city }}</th>
+                <th>{{ trip.arrival_airport }}</th>
+                <th>{{ trip.arrival_terminal }}</th>
+                <th>{{ trip.arrival_date }}</th>
+                <th>{{ trip.arrival_time }}</th>
+                <th>{{ trip.luggage_price }} BYN</th>
+                <th>{{ trip.general_econom_places_count }}</th>
+                <th>{{ trip.left_econom_places_count }}</th>
+                <th>{{ trip.econom_place_price_default }}</th>
+                <th>{{ trip.econom_place_price_child }}</th>
+                <th>{{ trip.econom_place_price_baby }}</th>
+                <th>{{ trip.general_comfort_places_count }}</th>
+                <th>{{ trip.left_comfort_places_count }}</th>
+                <th>{{ trip.comfort_place_price_default }}</th>
+                <th>{{ trip.comfort_place_price_child }}</th>
+                <th>{{ trip.comfort_place_price_baby }}</th>
+                <th>{{ trip.general_business_places_count }}</th>
+                <th>{{ trip.left_business_places_count }}</th>
+                <th>{{ trip.business_place_price_default }}</th>
+                <th>{{ trip.business_place_price_child }}</th>
+                <th>{{ trip.business_place_price_baby }}</th>
+                <th>{{ trip.aviaCompany_name }}</th>
+            </tr>
         {% endfor %}
     </table>
 
     <h2>Create new trip</h2>
-    <form>
+    <form method="post" action="http://localhost/kursach/server/admin/addTrip">
+        <label>Departure country</label> <input type="text" name="departure_country">
+        <label style="margin-left: 10px">Departure city</label> <input type="text" name="departure_city">
+        <label style="margin-left: 10px">Departure airport</label> <input type="text" name="departure_airport">
+        <label style="margin-left: 10px">Departure terminal</label> <input type="text" name="departure_terminal">
+        <label style="margin-left: 10px">Departure date</label> <input type="date" name="departure_date">
+        <label style="margin-left: 10px">Departure time</label> <input type="time" name="departure_time"> <br><br>
+        <label>Arrival country</label> <input type="text" name="arrival_country">
+        <label style="margin-left: 25px">Arrival city</label> <input type="text" name="arrival_city">
+        <label style="margin-left: 25px">Arrival airport</label> <input type="text" name="arrival_airport">
+        <label style="margin-left: 25px">Arrival terminal</label> <input type="text" name="arrival_terminal">
+        <label style="margin-left: 25px">Arrival date</label> <input type="date" name="arrival_date">
+        <label style="margin-left: 25px">Arrival time</label> <input type="time" name="arrival_time"> <br><br>
+        <label>Luggage price</label> <input type="text" name="luggage_price"> <br><br>
+        <label>General econom places count</label> <input type="text" name="general_econom_places_count">
+        <label style="margin-left: 10px">Econom place price for adult</label> <input type="text" name="econom_place_price_default">
+        <label style="margin-left: 10px">Econom place price for child</label> <input type="text" name="econom_place_price_child">
+        <label style="margin-left: 10px">Econom place price for baby</label> <input type="text" name="econom_place_price_baby"> <br><br>
+        <label>General comfort places count</label> <input type="text" name="general_comfort_places_count">
+        <label style="margin-left: 10px">Comfort place price for adult</label> <input type="text" name="comfort_place_price_default">
+        <label style="margin-left: 10px">Comfort place price for child</label> <input type="text" name="comfort_place_price_child">
+        <label style="margin-left: 10px">Comfort place price for baby</label> <input type="text" name="comfort_place_price_baby"> <br><br>
+        <label>General business places count</label> <input type="text" name="general_business_places_count">
+        <label style="margin-left: 7px">Business place price for adult</label> <input type="text" name="business_place_price_default">
+        <label style="margin-left: 7px">Business place price for child</label> <input type="text" name="business_place_price_child">
+        <label style="margin-left: 7px">Business place price for baby</label> <input type="text" name="business_place_price_baby"> <br><br>
+        <label>Aviacompany name</label> <input type="text" name="aviaCompany_name"> <br><br>
         <input type="submit" value="Create trip">
     </form>
 </body>

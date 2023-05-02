@@ -215,17 +215,17 @@ class Trip
     public static function addTrip($data)
     {
         $connection = Database::getInstance();
-        $sql = 'INSERT INTO trips(trip_id, departure_country, departure_city, departure_airport, departure_terminal, departure_date, departure_time, arrival_country, '
+        $sql = 'INSERT INTO trips(departure_country, departure_city, departure_airport, departure_terminal, departure_date, departure_time, arrival_country, '
             . 'arrival_city, arrival_airport, arrival_terminal, arrival_date, arrival_time, luggage_price, general_econom_places_count, left_econom_places_count, '
             . 'econom_place_price_default, econom_place_price_child, econom_place_price_baby, general_comfort_places_count, left_comfort_places_count, comfort_place_price_default, '
             . 'comfort_place_price_child, comfort_place_price_baby, general_business_places_count, left_business_places_count, business_place_price_default, '
-            . 'business_place_price_child, business_place_price_baby, aviaCompany_name) VALUES(' . $data['trip_id'] . ', "' . $data['departure_country'] . '", "'
+            . 'business_place_price_child, business_place_price_baby, aviaCompany_name) VALUES("' . $data['departure_country'] . '", "'
             . $data['departure_city'] . '", "' . $data['departure_airport'] . '", "' . $data['departure_terminal'] . '", "' . $data['departure_date'] . '", "'
             . $data['departure_time'] . '", "' . $data['arrival_country'] . '", "' . $data['arrival_city'] . '", "' . $data['arrival_airport'] . '", "'
             . $data['arrival_terminal'] . '", "' . $data['arrival_date'] . '", "' . $data['arrival_time'] . '", ' . $data['luggage_price'] . ', ' . $data['general_econom_places_count']
-            . ', 0, ' . $data['econom_place_price_default'] . ', ' . $data['econom_place_price_child'] . ', ' . $data['econom_place_price_baby'] . ', ' . $data['general_comfort_places_count']
-            . ', 0, ' . $data['comfort_place_price_default'] . ', ' . $data['comfort_place_price_child'] . ', ' . $data['comfort_place_price_baby'] . ',' . $data['general_business_places_count']
-            . ', 0, ' . $data['business_place_price_default'] . ', ' . $data['business_place_price_child'] . ', ' . $data['business_place_price_baby'] . ', "' . $data['aviaCompany_name'] . '")';
+            . ', ' . $data['general_econom_places_count'] . ', ' . $data['econom_place_price_default'] . ', ' . $data['econom_place_price_child'] . ', ' . $data['econom_place_price_baby'] . ', ' . $data['general_comfort_places_count']
+            . ', ' . $data['general_comfort_places_count'] . ', ' . $data['comfort_place_price_default'] . ', ' . $data['comfort_place_price_child'] . ', ' . $data['comfort_place_price_baby'] . ',' . $data['general_business_places_count']
+            . ', ' . $data['general_business_places_count'] . ', ' . $data['business_place_price_default'] . ', ' . $data['business_place_price_child'] . ', ' . $data['business_place_price_baby'] . ', "' . $data['aviaCompany_name'] . '")';
 
         $connection->query($sql);
     }
@@ -233,6 +233,12 @@ class Trip
     public static function deleteTrip($trip_id)
     {
         $connection = Database::getInstance();
+        $sql = "DELETE FROM passangers WHERE trip_id = " . $trip_id;
+        $connection->query($sql);
+
+        $sql = "DELETE FROM flightPlaces WHERE flight_id = " . $trip_id;
+        $connection->query($sql);
+
         $sql = 'DELETE FROM trips WHERE trip_id = ' . $trip_id;
         $connection->query($sql);
     }
@@ -245,7 +251,7 @@ class Trip
             . $data['arrival_terminal'] . '", luggage_price = ' . $data['luggage_price'] . ', econom_place_price_default = ' . $data['econom_place_price_default']
             . ', econom_place_price_child = ' . $data['econom_place_price_child'] . ', econom_place_price_baby = ' . $data['econom_place_price_baby']
             . ', comfort_place_price_default = ' . $data['comfort_place_price_default'] . ', comfort_place_price_child = ' . $data['comfort_place_price_child']
-            . ', comfort_place_price_baby = ' . $data['comfort_place_price_baby'] . ', business_place_price_default' . $data['business_place_price_default']
+            . ', comfort_place_price_baby = ' . $data['comfort_place_price_baby'] . ', business_place_price_default = ' . $data['business_place_price_default']
             . ', business_place_price_child = ' . $data['business_place_price_child'] . ', business_place_price_baby = ' . $data['business_place_price_baby']
             . ' WHERE trip_id = ' . $data['trip_id'];
 

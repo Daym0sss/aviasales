@@ -1,0 +1,40 @@
+<html>
+<head>
+    <title>Aviasales</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script src="../../client/assets/js/index.js"></script>
+</head>
+<body>
+    <h2>Edit trip information</h2>
+
+    <form method="post" action="http://localhost/kursach/server/admin/updateTrip">
+        <input type="hidden" name="trip_id" value="{{ trip.trip_id }}">
+        <label style="margin-left: 10px">Departure date</label> <input type="date" name="departure_date" value="{{ trip.departure_date }}">
+        <label style="margin-left: 10px">Departure time</label> <input type="time" name="departure_time" value="{{ trip.departure_time }}">
+        <label style="margin-left: 10px">Departure terminal</label> <input type="text" name="departure_terminal" value="{{ trip.departure_terminal }}">
+        <br><br>
+        <label style="margin-left: 10px">Arrival date</label> <input type="date" name="arrival_date" value="{{ trip.arrival_date }}">
+        <label style="margin-left: 26px">Arrival time</label> <input type="time" name="arrival_time" value="{{ trip.arrival_time }}">
+        <label style="margin-left: 26px">Arrival terminal</label> <input type="text" name="arrival_terminal" value="{{ trip.arrival_terminal }}">
+        <br><br>
+        <label style="margin-left: 10px">Luggage price</label> <input type="text" name="luggage_price" value="{{ trip.luggage_price }}">
+        <br><br>
+        <label style="margin-left: 10px">Econom place price for adult</label> <input type="text" name="econom_place_price_default" value="{{ trip.econom_place_price_default }}">
+        <label style="margin-left: 10px">Econom place price for child</label> <input type="text" name="econom_place_price_child" value="{{ trip.econom_place_price_child }}">
+        <label style="margin-left: 10px">Econom place price for baby</label> <input type="text" name="econom_place_price_baby" value="{{ trip.econom_place_price_baby }}">
+        <br><br>
+        <label style="margin-left: 10px">Comfort place price for adult</label> <input type="text" name="comfort_place_price_default" value="{{ trip.comfort_place_price_default }}">
+        <label style="margin-left: 10px">Comfort place price for child</label> <input type="text" name="comfort_place_price_child" value="{{ trip.comfort_place_price_child }}">
+        <label style="margin-left: 10px">Comfort place price for baby</label> <input type="text" name="comfort_place_price_baby" value="{{ trip.comfort_place_price_baby }}">
+        <br><br>
+        <label style="margin-left: 10px">Business place price for adult</label> <input type="text" name="business_place_price_default" value="{{ trip.business_place_price_default }}">
+        <label style="margin-left: 10px">Business place price for child</label> <input type="text" name="business_place_price_child" value="{{ trip.business_place_price_child }}">
+        <label style="margin-left: 10px">Business place price for baby</label> <input type="text" name="business_place_price_baby" value="{{ trip.business_place_price_baby }}">
+        <br><br>
+        <label style="margin-left: 10px">Aviacompany name</label> <input type="text" name="aviaCompany_name" value="{{ trip.aviaCompany_name }}">
+        <br><br>
+        <input type="submit" value="Update">
+    </form>
+
+</body>
+</html>

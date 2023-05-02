@@ -1,0 +1,51 @@
+<html>
+<head>
+    <title>Aviasales</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script src="../../client/assets/js/index.js"></script>
+</head>
+<body>
+    <h2>Users page</h2>
+    <table border="1">
+        <tr>
+            <th>User ID</th>
+            <th>First name</th>
+            <th>Second name</th>
+            <th>Last name</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th>Login</th>
+            <th>Password</th>
+            <th>Action</th>
+        </tr>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.user_id }}</td>
+                <td>{{ user.firstName }}</td>
+                <td>{{ user.secondName }}</td>
+                <td>{{ user.lastName }}</td>
+                <td>{{ user.phone }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.login }}</td>
+                <td>{{ user.password }}</td>
+                {% if user.role_id == 3 %}
+                    <td>
+                        <form method="post" action="http://localhost/kursach/server/admin/changeUserRole">
+                            <input type="hidden" value="1" name="role_id">
+                            <input type="hidden" value="{{ user.user_id }}" name="user_id">
+                            <input type="submit" value="Give administrative privileges">
+                        </form>
+                    </td>
+                {% else %}
+                    <td>
+                        <form method="post" action="http://localhost/kursach/server/admin/changeUserRole">
+                            <input type="hidden" value="3" name="role_id">
+                            <input type="hidden" value="{{ user.user_id }}" name="user_id">
+                            <input type="submit" value="Give default user privileges">
+                        </form>
+                    </td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+    </table>
+</body>
