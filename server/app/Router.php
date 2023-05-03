@@ -79,6 +79,11 @@ class Router
              'controller' => UserController::class,
              'method' => 'refuseFromFlight'
          ],
+         '/user/getTicketPdf' =>
+         [
+             'controller' => UserController::class,
+             'method' => 'getTicketPdf'
+         ],
          '/flight/getDeparturePoints' =>
          [
              'controller' => FlightController::class,

@@ -37,14 +37,21 @@ class UserController
     public function profile()
     {
         session_start();
-        $user = User::getUserById($_SESSION['user_id']);
-        $loader = new FilesystemLoader($_SERVER['DOCUMENT_ROOT'] . '/kursach/client/views/user');
-        $twig = new Environment($loader);
-        $template = $twig->load('profile.html.twig');
-        echo $template->render([
-            'user' => $user
-        ]);
-        session_write_close();
+        if (isset($_SESSION['user_id']))
+        {
+            $user = User::getUserById($_SESSION['user_id']);
+            $loader = new FilesystemLoader($_SERVER['DOCUMENT_ROOT'] . '/kursach/client/views/user');
+            $twig = new Environment($loader);
+            $template = $twig->load('profile.html.twig');
+            echo $template->render([
+                'user' => $user
+            ]);
+            session_write_close();
+        }
+        else
+        {
+            header('Location: http://localhost/kursach/server/');
+        }
     }
 
     public function getLoginPage()
@@ -299,6 +306,10 @@ class UserController
         header('Location: http://localhost/kursach/server/user/profile');
     }
 
+    public function getTicketPdf()
+    {
+        User::getTicketPdf($_POST);
+    }
     public static function getAllUsers()
     {
         $users = [];
