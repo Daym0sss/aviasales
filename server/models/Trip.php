@@ -58,9 +58,9 @@ class Trip
         $points = [];
         foreach ($result as $row)
         {
-            if (!in_array($row['arrival_country'] . " " . $row['arrival_city'] . " " . $row['arrival_airport'], $points))
+            if (!in_array($row['arrival_country'] . "->" . $row['arrival_city'] . "->" . $row['arrival_airport'], $points))
             {
-                $points []= $row['arrival_country'] . " " . $row['arrival_city'] . " " . $row['arrival_airport'];
+                $points []= $row['arrival_country'] . "->" . $row['arrival_city'] . "->" . $row['arrival_airport'];
             }
         }
 
@@ -75,9 +75,9 @@ class Trip
         $points = [];
         foreach ($result as $row)
         {
-            if (!in_array($row['departure_country'] . " " . $row['departure_city'] . " " . $row['departure_airport'], $points))
+            if (!in_array($row['departure_country'] . "->" . $row['departure_city'] . "->" . $row['departure_airport'], $points))
             {
-                $points []= $row['departure_country'] . " " . $row['departure_city'] . " " . $row['departure_airport'];
+                $points []= $row['departure_country'] . "->" . $row['departure_city'] . "->" . $row['departure_airport'];
             }
         }
 

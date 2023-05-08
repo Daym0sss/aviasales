@@ -1,53 +1,251 @@
 <html>
     <head>
         <title>Aviasales</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
         <script src="../client/assets/js/index.js"></script>
     </head>
     <body>
-        {% if user_id %}
-            <form method="post" action="http://localhost/kursach/server/user/logout" onsubmit="checkLogout(event)">
-                <input type="submit" value="Logout">
-            </form>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="http://localhost/kursach/server">Aviasales</a>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="http://localhost/kursach/server/">Home</a>
+                        </li>
+                    </ul>
 
-            User: <input type="text" disabled value="{{ name }}"> <br><br>
-            <form method="post" action="http://localhost/kursach/server/user/profile">
-                <input type="submit" value="Profile">
-            </form>
-        {% else %}
-            <form method="post" action="http://localhost/kursach/server/login">
-                <input type="submit" value="Sign in">
-            </form>
-            <form method="post" action="http://localhost/kursach/server/register">
-                <input type="submit" value="Register">
-            </form>
-        {% endif %}
+                    {% if user_id %}
+                        <form class="d-flex">
+                            <i class="bi bi-person-circle form-control">{{ name }}</i>
+                        </form>
+
+                        <form style="margin-left: 5px" class="d-flex" method="post" action="http://localhost/kursach/server/user/profile">
+                            <input type="submit" class="btn btn-outline-success" id="profileBtn" value="Profile">
+                        </form>
+
+                        <form style="margin-left: 10px" class="d-flex" method="post" action="http://localhost/kursach/server/user/logout" onsubmit="checkLogout(event)">
+                            <input class="btn btn-outline-success" type="submit" value="Logout">
+                        </form>
+                    {% else %}
+                        <form class="d-flex" method="post" action="http://localhost/kursach/server/login">
+                            <input type="submit" class="btn btn-outline-success" id="profileBtn" value="Login">
+                        </form>
+
+                        <form style="margin-left: 10px" class="d-flex" method="post" action="http://localhost/kursach/server/register">
+                            <input class="btn btn-outline-success" type="submit" value="Register">
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+        </nav>
+
         <br><br>
-        <form method="post" action="http://localhost/kursach/server/flight/getFlightsByUserChoice">
-            <label>Departure point</label>
-            <select name="departurePoint">
-                <option value="none">None</option>
-                {% for departurePoint in departurePoints %}
-                    <option value="{{ departurePoint }}">{{ departurePoint }}</option>
-                {% endfor %}
-            </select> <br><br>
-            <label>Arrival point</label>
-            <select name="arrivalPoint">
-                <option value="none">None</option>
-                {% for arrivalPoint in arrivalPoints %}
-                    <option value="{{ arrivalPoint }}">{{ arrivalPoint }}</option>
-                {% endfor %}
-            </select> <br><br>
-            <label>Departure date</label>  <input type="date" name="departureDate" required> <br><br>
-            <label>Adults count</label>  <input type="number" name="defaultCount" value="1"> <br><br>
-            <label>Children count</label>  <input type="number" name="childCount" value="0"> <br><br>
-            <label>Babies count</label>  <input type="number" name="babyCount" value="0"> <br><br>
 
-            <label>Econom class</label>  <input type="radio" name="class" value="econom" checked> <br><br>
-            <label>Comfort class</label>  <input type="radio" name="class" value="comfort"> <br><br>
-            <label>Business class</label>  <input type="radio" name="class" value="business"> <br><br>
-            <input type="hidden" name="user_id" value="{{ user_id }}">
-            <input type="submit" value="Find">
-        </form>
+        <div class="container">
+            <div class="card custom-bg w-75 p-4 d-flex" style="margin-left: 150px">
+                <div class="row">
+                    <div class="pb-3 h3 text-left">Flight parameters &#128747;</div>
+                </div>
+                <form id="flight-form" method="post" action="http://localhost/kursach/server/flight/getFlightsByUserChoice">
+
+                    <div class="row">
+                        <div class="form-group col-md align-items-start flex-column">
+                            <label for="origin" class="d-inline-flex">Departure point</label>
+                            <select class="form-select" id="origin" name="departurePoint" required>
+                                <option value="none">None</option>
+                                {% for departurePoint in departurePoints %}
+                                    <option value="{{ departurePoint }}">{{ departurePoint }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group col-md align-items-start flex-column">
+                            <label for="depart" class="d-inline-flex">Arrival point</label>
+                            <select class="form-select" id="origin" name="arrivalPoint" required>
+                                <option value="none">None</option>
+                                {% for arrivalPoint in arrivalPoints %}
+                                    <option value="{{ arrivalPoint }}">{{ arrivalPoint }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-md align-items-start flex-column">
+                            <label for="departure-date" class=" d-inline-flex">Departure date</label>
+                            <input type="date" class="form-control" id="departure-date" name="departureDate" required>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-lg-3 align-items-start flex-column">
+                            <label for="adults" class="d-inline-flex col-auto">Adults 12+</label>
+                            <select class="form-select" id="adults" name="defaultCount">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group col-lg-3 align-items-start flex-column">
+                            <label for="children" class="d-inline-flex col-auto">Children 2-11</label>
+                            <select class="form-select" id="children" name="childCount">
+                                <option value="0">0</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group col-lg-3 align-items-start flex-column">
+                            <label for="infants" class="d-inline-flex col-auto">Babies less than 2</label>
+                            <select class="form-select" id="infants" name="babyCount">
+                                <option value="0">0</option>
+                                <option value="1">1</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-lg-6 align-items-start flex-column">
+                            <label for="cabin" class="d-inline-flex">Cabin</label>
+                            <select class="form-select" id="cabin" name="class">
+                                <option value="econom">Econom</option>
+                                <option value="comfort">Comfort</option>
+                                <option value="business">Business</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <div class="row">
+                        <div class="text-left col-auto">
+                            <button type="submit" class="btn btn-primary">Search flights</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <br>
+
+        <footer class="text-center text-lg-start bg-primary text-dark">
+            <!-- Section: Social media -->
+            <section class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom">
+                <!-- Left -->
+                <div class="me-5 d-none d-lg-block">
+                    <span>Get connected with us on social networks</span>
+                </div>
+                <!-- Left -->
+            </section>
+            <!-- Section: Social media -->
+
+            <!-- Section: Links  -->
+            <section class="">
+                <div class="container text-center text-md-start mt-5">
+                    <!-- Grid row -->
+                    <div class="row mt-3">
+                        <!-- Grid column -->
+                        <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
+                            <!-- Content -->
+                            <h6 class="text-uppercase fw-bold mb-4">
+                                <i class="fas fa-gem me-3"></i>Company name
+                            </h6>
+                            <p>
+                                Aviasales is one of the best sites for searching and booking places for flights all around the world
+                            </p>
+                        </div>
+                        <!-- Grid column -->
+
+                        <!-- Grid column -->
+                        <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
+                            <!-- Links -->
+                            <h6 class="text-uppercase fw-bold mb-4">
+                                Products
+                            </h6>
+                            <p>
+                                <span class="text-reset">Laravel</span>
+                            </p>
+                            <p>
+                                <span class="text-reset">Symfony</span>
+                            </p>
+                            <p>
+                                <span class="text-reset">Zend</span>
+                            </p>
+                            <p>
+                                <span class="text-reset">Drupal</span>
+                            </p>
+                        </div>
+                        <!-- Grid column -->
+
+                        <!-- Grid column -->
+                        <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
+                            <!-- Links -->
+                            <h6 class="text-uppercase fw-bold mb-4">
+                                Useful links
+                            </h6>
+                            <p>
+                                <a href="https://developer.mozilla.org/en-US/" class="text-reset">MDN docs</a>
+                            </p>
+                            <p>
+                                <a href="https://www.php.net/docs.php" class="text-reset">PHP docs</a>
+                            </p>
+                            <p>
+                                <a href="https://dev.mysql.com/doc/" class="text-reset">MySQL docs</a>
+                            </p>
+                            <p>
+                                <a href="https://getbootstrap.com/docs/5.0/getting-started/introduction/" class="text-reset">Bootstrap docs</a>
+                            </p>
+                        </div>
+                        <!-- Grid column -->
+
+                        <!-- Grid column -->
+                        <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
+                            <!-- Links -->
+                            <h6 class="text-uppercase fw-bold mb-4">Contact</h6>
+                            <p><i class="fas fa-home me-3"></i> New York, NY 10012, US</p>
+                            <p>
+                                <i class="fas fa-envelope me-3"></i>
+                                aviasales@enterprise.com
+                            </p>
+                            <p><i class="fas fa-phone me-3"></i> + 01 234 567 88</p>
+                            <p><i class="fas fa-print me-3"></i> + 01 234 567 89</p>
+                        </div>
+                        <!-- Grid column -->
+                    </div>
+                    <!-- Grid row -->
+                </div>
+            </section>
+            <!-- Section: Links  -->
+
+            <!-- Copyright -->
+            <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
+                © 2023 Copyright: Aviasales.com
+            </div>
+            <!-- Copyright -->
+        </footer>
     </body>
 </html>

@@ -56,18 +56,28 @@ class UserController
 
     public function getLoginPage()
     {
+        session_start();
         $loader = new FilesystemLoader($_SERVER['DOCUMENT_ROOT'] . '/kursach/client/views/user');
         $twig = new Environment($loader);
         $template = $twig->load('login.html.twig');
-        echo $template->render();
+        echo $template->render([
+            'user_id' => isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null,
+            'name' => isset($_SESSION['name']) ? $_SESSION['name'] : null,
+        ]);
+        session_write_close();
     }
 
     public function getRegisterPage()
     {
+        session_start();
         $loader = new FilesystemLoader($_SERVER['DOCUMENT_ROOT'] . '/kursach/client/views/user');
         $twig = new Environment($loader);
         $template = $twig->load('register.html.twig');
-        echo $template->render();
+        echo $template->render([
+            'user_id' => isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null,
+            'name' => isset($_SESSION['name']) ? $_SESSION['name'] : null,
+        ]);
+        session_write_close();
     }
 
     /*
@@ -86,7 +96,7 @@ class UserController
         {
             session_start();
             $_SESSION['user_id'] = $user->user_id;
-            $_SESSION['name'] = $user->login;
+            $_SESSION['name'] = $user->firstName . " " . $user->lastName;
             session_write_close();
             echo json_encode(['message' => 'You are logged in']);
         }
@@ -115,7 +125,7 @@ class UserController
         {
             session_start();
             $_SESSION['user_id'] = $user_id;
-            $_SESSION['name'] = $user->login;
+            $_SESSION['name'] = $user->firstName . " " . $user->lastName;
             session_write_close();
             echo json_encode(['message' => 'You have been registered']);
         }
