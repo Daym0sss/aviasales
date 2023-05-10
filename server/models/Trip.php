@@ -141,9 +141,9 @@ class Trip
     {
         $flights = [];
         $departurePoint = $flight_params['departurePoint'];
-        $departureData = explode(' ', $departurePoint);
+        $departureData = explode('->', $departurePoint);
         $arrivalPoint = $flight_params['arrivalPoint'];
-        $arrivalData = explode(' ', $arrivalPoint);
+        $arrivalData = explode('->', $arrivalPoint);
 
         $departure_country = $departureData[0];
         $departure_city = $departureData[1];

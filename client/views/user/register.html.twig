@@ -6,6 +6,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="../client/assets/css/index.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     <script src="../client/assets/js/index.js"></script>
 </head>
@@ -27,24 +28,62 @@
                     </form>
 
                     <form style="margin-left: 5px" class="d-flex" method="post" action="http://localhost/kursach/server/user/profile">
-                        <input type="submit" class="btn btn-outline-success" id="profileBtn" value="Profile">
+                        <input type="submit" class="btn btn-outline-dark" id="profileBtn" value="Profile">
                     </form>
 
                     <form style="margin-left: 10px" class="d-flex" method="post" action="http://localhost/kursach/server/user/logout" onsubmit="checkLogout(event)">
-                        <input class="btn btn-outline-success" type="submit" value="Logout">
+                        <input class="btn btn-outline-dark" type="submit" value="Logout">
                     </form>
                 {% else %}
                     <form class="d-flex" method="post" action="http://localhost/kursach/server/login">
-                        <input type="submit" class="btn btn-outline-success" id="profileBtn" value="Login">
+                        <input type="submit" class="btn btn-outline-dark" id="profileBtn" value="Login">
                     </form>
 
                     <form style="margin-left: 10px" class="d-flex" method="post" action="http://localhost/kursach/server/register">
-                        <input class="btn btn-outline-success" type="submit" value="Register">
+                        <input class="btn btn-outline-dark" type="submit" value="Register">
                     </form>
                 {% endif %}
             </div>
         </div>
     </nav>
+
+    <!-- Alert with icon -->
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+        <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+        </symbol>
+        <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+        </symbol>
+        <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+        </symbol>
+    </svg>
+
+    <div id="alertMessageSuccess">
+        <div class="alert alert-success d-flex align-items-center" role="alert" style="width: 30%; margin-left: 1300px">
+            <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill"/></svg>
+            <div id="alert-text-success">
+                You have been registered
+            </div>
+            <button type="button" class="btn-close" onclick="loginSuccessCloseClick()" id="loginSuccessCloseBtn" data-bs-dismiss="alert" aria-label="Close" style="margin-left: 220px"></button>
+        </div>
+    </div>
+
+    <div id="alertMessageFail">
+        <div class="alert alert-danger d-flex align-items-center" role="alert" style="width: 30%; margin-left: 1300px">
+            <div class="alert alert-danger d-flex align-items-center" role="alert">
+                <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+                <div id="alert-text-fail">
+                    User with this login already exists
+                </div>
+            </div>
+            <button type="button" class="btn-close" onclick="loginFailCloseClick()" data-bs-dismiss="alert" aria-label="Close" style="margin-left: 70px"></button>
+        </div>
+    </div>
+
+
+    <!-- Alert with icon -->
 
 
     <section class="">
@@ -70,19 +109,19 @@
                                     <div class="row">
                                         <div class="col-md-6 mb-4">
                                             <div class="form-outline">
-                                                <input type="text" id="form3Example1" class="form-control" name="firstName"/>
+                                                <input type="text" id="form3Example1" class="form-control" name="firstName" required/>
                                                 <label class="form-label" for="form3Example1">First name</label>
                                             </div>
                                         </div>
                                         <div class="col-md-6 mb-4">
                                             <div class="form-outline">
-                                                <input type="text" id="form3Example2" class="form-control" name="secondName"/>
+                                                <input type="text" id="form3Example2" class="form-control" name="secondName" required/>
                                                 <label class="form-label" for="form3Example2">Second name</label>
                                             </div>
                                         </div>
                                         <div class="col-md-6 mb-4">
                                             <div class="form-outline">
-                                                <input type="text" id="form3Example3" class="form-control" name="lastName"/>
+                                                <input type="text" id="form3Example3" class="form-control" name="lastName" required/>
                                                 <label class="form-label" for="form3Example3">Last name</label>
                                             </div>
                                         </div>
@@ -91,13 +130,13 @@
                                     <div class="row">
                                         <div class="col-md-6 mb-4">
                                             <div class="form-outline">
-                                                <input type="text" id="form3Example1" class="form-control" name="email"/>
+                                                <input type="text" id="form3Example1" class="form-control" name="email" required/>
                                                 <label class="form-label" for="form3Example1">Email</label>
                                             </div>
                                         </div>
                                         <div class="col-md-6 mb-4">
                                             <div class="form-outline">
-                                                <input type="text" id="form3Example2" class="form-control" name="phone"/>
+                                                <input type="text" id="form3Example2" class="form-control" name="phone" required/>
                                                 <label class="form-label" for="form3Example2">Phone</label>
                                             </div>
                                         </div>
@@ -106,13 +145,13 @@
                                     <div class="row">
                                         <div class="col-md-6 mb-4">
                                             <div class="form-outline">
-                                                <input type="text" id="form3Example1" class="form-control" name="login"/>
+                                                <input type="text" id="form3Example1" class="form-control" name="login" required/>
                                                 <label class="form-label" for="form3Example1">Login</label>
                                             </div>
                                         </div>
                                         <div class="col-md-6 mb-4">
                                             <div class="form-outline">
-                                                <input type="password" id="form3Example2" class="form-control" name="password"/>
+                                                <input type="password" id="form3Example2" class="form-control" name="password" required/>
                                                 <label class="form-label" for="form3Example2">Password</label>
                                             </div>
                                         </div>
@@ -141,7 +180,7 @@
         <section class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom">
             <!-- Left -->
             <div class="me-5 d-none d-lg-block">
-                <span>Get connected with us on social networks</span>
+                <h6 style="margin-left: 800px; padding-top: 20px" class="text-uppercase fw-bold mb-4">Additional info</h6>
             </div>
             <!-- Left -->
         </section>

@@ -1,17 +1,17 @@
-function checkForm(event)
+function checkBookTicketsForm(event)
 {
     event.preventDefault();
-    var selectsCount = document.querySelectorAll("select").length / 2;
-    var placesNum = [];
-    for(var i = 1;i <= selectsCount;i++)
+    var passangersCount = (event.currentTarget.elements.length - 5) / 6;
+    var passports = [];
+    for(var i = 1;i <= passangersCount;i++)
     {
-        placesNum.push(document.getElementById("letter" + i).value + document.getElementById("num" + i).value);
+        if(!(passports.includes(document.getElementById("passport_num" + i).value)))
+        {
+            passports.push(document.getElementById("passport_num" + i).value);
+        }
     }
-    if (new Set(placesNum).size != placesNum.length)
-    {
-        alert("All the places chosen must be different");
-    }
-    else
+
+    if (passports.length == passangersCount)
     {
         $.ajax({
             type: "POST",
@@ -21,10 +21,13 @@ function checkForm(event)
             data: $('form').serialize(),
             success: function (data)
             {
-                alert(data.message);
-                window.location.href = "http://localhost/kursach/server/";
+                document.getElementById("alertMessageSuccess").style.display = "block";
             }
         });
+    }
+    else
+    {
+        document.getElementById("alertMessageFail").style.display = "block";
     }
 }
 
@@ -65,13 +68,28 @@ function loginUser(event)
         data: {login: login, password: password},
         success: function (data)
         {
-            alert(data.message);
-            if (data.message != "Wrong credentials")
+            if (data.message == "Wrong credentials")
             {
-                window.location.href = "http://localhost/kursach/server/";
+                document.getElementById('alertMessageFail').style.display = "block";
             }
+            else
+            {
+                document.getElementById('alertMessageSuccess').style.display = "block";
+            }
+
         }
     });
+}
+
+function loginSuccessCloseClick()
+{
+    document.getElementById("alertMessageSuccess").style.display = "none";
+    window.location.href = "http://localhost/kursach/server/";
+}
+
+function loginFailCloseClick()
+{
+    document.getElementById("alertMessageFail").style.display = "none";
 }
 
 function registerUser(event)
@@ -85,21 +103,38 @@ function registerUser(event)
     var login = event.currentTarget.elements[5].value;
     var password = event.currentTarget.elements[6].value;
 
-    $.ajax({
-        type: "POST",
-        url: "http://localhost/kursach/server/user/register",
-        contentType: "application/x-www-form-urlencoded; charset=UTF-8",
-        dataType : "json",
-        data: {login: login, password: password, firstName: firstName, secondName: secondName, lastName: lastName, email: email, phone: phone, login: login, password: password},
-        success: function (data)
-        {
-            alert(data.message);
-            if (data.message != "User with this login already exists")
+    if (login.length < 5)
+    {
+        document.getElementById("alert-text-fail").innerText = "Login length must be at least 5 symbols";
+        document.getElementById('alertMessageFail').style.display = "block";
+    }
+    else if (password.length < 8)
+    {
+        document.getElementById("alert-text-fail").innerText = "Password length must be at least 8 symbols";
+        document.getElementById('alertMessageFail').style.display = "block";
+    }
+    else
+    {
+        $.ajax({
+            type: "POST",
+            url: "http://localhost/kursach/server/user/register",
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+            dataType : "json",
+            data: {login: login, password: password, firstName: firstName, secondName: secondName, lastName: lastName, email: email, phone: phone, login: login, password: password},
+            success: function (data)
             {
-                window.location.href = "http://localhost/kursach/server/";
+                if (data.message == "User with this login already exists")
+                {
+                    document.getElementById('alert-text-fail').innerText = "User with this login already exists";
+                    document.getElementById('alertMessageFail').style.display = "block";
+                }
+                else
+                {
+                    document.getElementById('alertMessageSuccess').style.display = "block";
+                }
             }
-        }
-    });
+        });
+    }
 }
 
 function loadAllFlights()
@@ -117,10 +152,12 @@ function loadAllFlights()
             if (flights.length == 0)
             {
                 document.getElementById("flightsInformation").innerHTML = "<h2>No flights have been found for this period</h2>";
+                document.getElementById("marginForFooter").style.display = "block";
             }
             else
             {
-               drawBookedFlights(flights, keys);
+                document.getElementById("marginForFooter").style.display = "none";
+                drawBookedFlights(flights, keys);
             }
         }
     });
@@ -130,7 +167,7 @@ function drawBookedFlights(flights, keys)
 {
     var i = 0;
     var body = "";
-    body += "<table border='1'><tr><th>#</th><th>Departure</th><th>Arrival</th><th>Passangers</th><th>Flight class : Price</th><th>Actions</th></tr>";
+    body += "<table class='table table-hover table-dark table-gradient'><tr><th>#</th><th style='width: 300px'>Departure</th><th style='width: 300px'>Arrival</th><th style='width: 700px'>Passangers</th><th style='width: 170px'>Flight class : Price</th><th>Actions</th></tr>";
     for(i = 0;i < keys.length;i++)
     {
         var flight = flights[keys[i]];
@@ -200,17 +237,16 @@ function drawBookedFlights(flights, keys)
         var flight_class = passangers[0].class;
         flight_class = flight_class[0].toUpperCase() + flight_class.substr(1);
         body += "<td>" + flight_class + ": " + result_price + " BYN" + "</td>";
-        body += "<td> <form method='post' action='http://localhost/kursach/server/user/refuseFromFlight' onsubmit='confirmFlightRefuse(event)'> <input type='hidden' value='" + flight.trip_information.trip_id + "' name='trip_id'> <input type='hidden' value='" + flight.passangers_information[0].user_id + "' name='user_id'> <input type='submit' value='Refuse'></form> <br> <form method='post' action='http://localhost/kursach/server/user/getTicketPdf' target='_blank'> <input type='hidden' value='" + flight.trip_information.trip_id + "' name='trip_id'> <input type='hidden' value='" + flight.passangers_information[0].user_id + "' name='user_id'> <input type='submit' value='Get ticket PDF'></form>  </td>";
+        body += "<td> <form method='post' action='http://localhost/kursach/server/user/refuseFromFlight' onsubmit='confirmFlightRefuse(event)'> <input type='hidden' value='" + flight.trip_information.trip_id + "' name='trip_id'> <input type='hidden' value='" + flight.passangers_information[0].user_id + "' name='user_id'> <input type='submit' class='btn btn-danger' value='Refuse'></form> <br> <form method='post' action='http://localhost/kursach/server/user/getTicketPdf' target='_blank'> <input type='hidden' value='" + flight.trip_information.trip_id + "' name='trip_id'> <input type='hidden' value='" + flight.passangers_information[0].user_id + "' name='user_id'> <input type='submit' class='btn btn-warning' value='Get ticket PDF'></form>  </td>";
         body += "<tr>";
     }
-    body += "</table>";
+    body += "</table> <br><br><br>";
     document.getElementById("flightsInformation").innerHTML = body;
 }
 
 function changeFlightPeriod(event)
 {
     var optionSelected = event.currentTarget.value;
-    console.log(optionSelected);
     $.ajax({
         type: "POST",
         url: "http://localhost/kursach/server/user/getBookedFlights",
@@ -223,14 +259,36 @@ function changeFlightPeriod(event)
             var keys = Object.keys(flights);
             if (flights.length == 0)
             {
-                document.getElementById("flightsInformation").innerHTML = "<h2>No flights have been found for this period</h2>";
+                document.getElementById("flightsInformation").innerHTML = "<h2 style='margin-left: 30px'>No flights have been found for this period</h2>";
+                document.getElementById("marginForFooter").style.display = "block";
             }
             else
             {
+                document.getElementById("marginForFooter").style.display = "none";
                 drawBookedFlights(flights, keys);
             }
         }
     });
+}
+
+function checkFlightParamsForm(event)
+{
+    event.preventDefault();
+    var formEl = event.currentTarget;
+    if (formEl.elements[0].value == "none")
+    {
+        document.getElementById("alert-text-fail").innerText = "Departure point not selected";
+        document.getElementById("alertMessageFail").style.display = "block";
+    }
+    else if (formEl.elements[1].value == "none")
+    {
+        document.getElementById("alert-text-fail").innerText = "Arrival point not selected";
+        document.getElementById("alertMessageFail").style.display = "block";
+    }
+    else
+    {
+        event.currentTarget.submit();
+    }
 }
 
 function confirmTripDelete(event)

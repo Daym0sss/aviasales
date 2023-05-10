@@ -17,3 +17,19 @@
     width: 90px;
     background-color: red;
 }
+
+a {
+    transition: 0.5s;
+}
+
+a:hover {
+    background-color: black;
+}
+
+#alertMessageSuccess {
+    display: none;
+}
+
+#alertMessageFail {
+    display: none;
+}

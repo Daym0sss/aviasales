@@ -44,7 +44,9 @@ class UserController
             $twig = new Environment($loader);
             $template = $twig->load('profile.html.twig');
             echo $template->render([
-                'user' => $user
+                'user' => $user,
+                'user_id' => $_SESSION['user_id'],
+                'name' => $_SESSION['name']
             ]);
             session_write_close();
         }
@@ -199,6 +201,7 @@ class UserController
      */
     public function chooseATicket()
     {
+        session_start();
         $trip = Trip::getTrip($_POST['trip_id']);
         $passangers = [];
         for($i = 0;$i < $_POST['defaultCount'];$i++)
@@ -226,9 +229,11 @@ class UserController
         echo $template->render([
             'flight' => $trip,
             'passangers' => $passangers,
-            'user_id' => $_POST['user_id'],
+            'user_id' => $_SESSION['user_id'],
+            'name' => $_SESSION['name'],
             'class' => $_POST['class'],
         ]);
+        session_write_close();
     }
 
     public function registerForFlight()

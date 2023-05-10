@@ -51,6 +51,7 @@ class FlightController
     public function getFlightsByUserChoice()
     {
         $flights = Trip::getFlightsByUserChoice($_POST);
+        session_start();
         $flight_class_places_variable = $_POST['class'] . "_place_price";
         for($i = 0;$i < count($flights);$i++)
         {
@@ -64,11 +65,13 @@ class FlightController
         $template = $twig->load('flightsFound.html.twig');
         echo $template->render([
             'flights' => $flights,
-            'user_id' => $_POST['user_id'],
+            'user_id' => isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null,
+            'name' => isset($_SESSION['name']) ? $_SESSION['name'] : null,
             'defaultCount' => $_POST['defaultCount'],
             'childCount' => $_POST['childCount'],
             'babyCount' => $_POST['babyCount'],
             'class' => $_POST['class']
         ]);
+        session_write_close();
     }
 }
