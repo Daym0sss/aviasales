@@ -13,6 +13,47 @@
     <script src="../../client/assets/js/index.js"></script>
 </head>
 <body onload="loadAllFlights()" class="bg-info">
+
+    <div id="confirmRefuse" class="modal" tabindex="-1" role="dialog" style="display: none">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content bg-secondary">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirm your action</h5>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to leave your account?</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary bg-danger" style="margin-right: 2px" onclick="refuse()">Yes</button>
+                    <button class="btn btn-secondary bg-primary" data-dismiss="modal" style="margin-right: 180px" onclick="document.getElementById('confirmRefuse').style.display = 'none';">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="trip_id_div" style="display: none">
+
+    </div>
+
+    <div id="confirmLogout" class="modal" tabindex="-1" role="dialog" style="display: none">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content bg-info">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirm your action</h5>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to leave your account?</p>
+                </div>
+                <div class="modal-footer">
+                    <form id="logoutForm" style="margin-left: 10px" class="d-flex" method="post" action="http://localhost/kursach/server/user/logout">
+                    </form>
+                    <button class="btn btn-primary bg-danger" style="margin-right: 2px" onclick="logoutUser()">Yes</button>
+                    <button class="btn btn-secondary bg-primary" data-dismiss="modal" style="margin-right: 180px" onclick="document.getElementById('confirmLogout').style.display = 'none';">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container-fluid">
             <a class="navbar-brand" href="http://localhost/kursach/server">Aviasales</a>
@@ -21,21 +62,31 @@
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="http://localhost/kursach/server/">Home</a>
                     </li>
+
+
+                    {% if user_id %}
+
+                    {% if role_id == 1 %}
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="http://localhost/kursach/server/admin/main">Admin page</a>
+                        </li>
+                    {% endif %}
+
                 </ul>
+                <form class="d-flex">
+                    <i class="bi bi-person-circle form-control">{{ name }}</i>
+                </form>
 
-                {% if user_id %}
-                    <form class="d-flex">
-                        <i class="bi bi-person-circle form-control">{{ name }}</i>
-                    </form>
 
-                    <form style="margin-left: 5px" class="d-flex" method="post" action="http://localhost/kursach/server/user/profile">
-                        <input type="submit" class="btn btn-outline-dark" id="profileBtn" value="Profile">
-                    </form>
 
-                    <form style="margin-left: 10px" class="d-flex" method="post" action="http://localhost/kursach/server/user/logout" onsubmit="checkLogout(event)">
-                        <input class="btn btn-outline-dark" type="submit" value="Logout">
-                    </form>
+                <form style="margin-left: 5px" class="d-flex" method="post" action="http://localhost/kursach/server/user/profile">
+                    <input type="submit" class="btn btn-outline-dark" id="profileBtn" value="Profile">
+                </form>
+
+                <button style="margin-left: 5px" class="btn btn-outline-dark" id="logoutBtn" onclick="checkLogout()">Logout</button>
+
                 {% else %}
+                    </ul>
                     <form class="d-flex" method="post" action="http://localhost/kursach/server/login">
                         <input type="submit" class="btn btn-outline-dark" id="profileBtn" value="Login">
                     </form>
@@ -66,7 +117,7 @@
                     <small class="text-muted">Click to change your personal data: {{ flight.aviaCompany_name }}
                         <form method="post" action="http://localhost/kursach/server/user/edit">
                             <input type="hidden" name="user_id" value="{{ user.user_id }}">
-                            <input type="submit" class="btn btn-primary" value="Change user information">
+                            <input type="submit" class="btn btn-primary bg-primary" value="Change user information">
                         </form>
                     </small>
                 </div>
@@ -79,7 +130,7 @@
 
 
     <h2 style="margin-left: 30px">Booked flights information</h2>
-    <h5 style="margin-left: 30px">Period</h5>
+    <h5 style="margin-left: 30px">Choose period</h5>
     <div class="form-group" style="margin-left: 30px">
         <div class="col-sm-2">
             <select class="form-control" onchange="changeFlightPeriod(event)">
@@ -102,7 +153,7 @@
 
     <br><br>
 
-    <footer class="text-center text-lg-start bg-primary text-dark" style="margin-top: -120px">
+    <footer class="text-center text-lg-start bg-primary text-dark" style="margin-top: -135px">
         <!-- Section: Social media -->
         <section class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom">
             <!-- Left -->

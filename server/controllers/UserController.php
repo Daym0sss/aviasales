@@ -22,6 +22,14 @@ class UserController
         session_start();
         $departurePoints = Trip::getDeparturePoints();
         $arrivalPoints = Trip::getArrivalPoints();
+        if (isset($_SESSION['user_id']))
+        {
+            $role_id = User::getUserById($_SESSION['user_id'])['role_id'];
+        }
+        else
+        {
+            $role_id = null;
+        }
         $loader = new FilesystemLoader($_SERVER['DOCUMENT_ROOT'] . '/kursach/client/views');
         $twig = new Environment($loader);
         $template = $twig->load('index.html.twig');
@@ -30,6 +38,7 @@ class UserController
             'arrivalPoints' => $arrivalPoints,
             'user_id' => isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null,
             'name' => isset($_SESSION['name']) ? $_SESSION['name'] : null,
+            'role_id' => $role_id
         ]);
         session_write_close();
     }
@@ -49,6 +58,32 @@ class UserController
                 'name' => $_SESSION['name']
             ]);
             session_write_close();
+        }
+        else
+        {
+            header('Location: http://localhost/kursach/server/');
+        }
+    }
+
+    public function checkIfAuthorized()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == "POST")
+        {
+            session_start();
+            $data = [];
+            if (isset($_SESSION['user_id']))
+            {
+                $data['user_id'] = $_SESSION['user_id'];
+                $data['role'] = User::getUserById($_SESSION['user_id'])['role_id'];
+            }
+            else
+            {
+                $data['user_id'] = null;
+                $data['role'] = null;
+            }
+            session_write_close();
+
+            echo json_encode(['data' => $data]);
         }
         else
         {
@@ -90,21 +125,28 @@ class UserController
      */
     public function login()
     {
-        $login = $_POST['login'];
-        $password = $_POST['password'];
-
-        $user = User::loginUser($login, $password);
-        if ($user != null)
+        if ($_SERVER['REQUEST_METHOD'] == "POST")
         {
-            session_start();
-            $_SESSION['user_id'] = $user->user_id;
-            $_SESSION['name'] = $user->firstName . " " . $user->lastName;
-            session_write_close();
-            echo json_encode(['message' => 'You are logged in']);
+            $login = $_POST['login'];
+            $password = $_POST['password'];
+
+            $user = User::loginUser($login, $password);
+            if ($user != null)
+            {
+                session_start();
+                $_SESSION['user_id'] = $user->user_id;
+                $_SESSION['name'] = $user->firstName . " " . $user->lastName;
+                session_write_close();
+                echo json_encode(['message' => 'You are logged in']);
+            }
+            else
+            {
+                echo json_encode(['message' => 'Wrong credentials']);
+            }
         }
         else
         {
-            echo json_encode(['message' => 'Wrong credentials']);
+            header('Location: http://localhost/kursach/server/');
         }
     }
 
@@ -121,29 +163,43 @@ class UserController
      */
     public function register()
     {
-        $user = new User($_POST['firstName'], $_POST['secondName'], $_POST['lastName'], $_POST['login'], $_POST['password'], $_POST['email'], $_POST['phone']);
-        $user_id = $user->registerNewUser();
-        if ($user_id)
+        if ($_SERVER['REQUEST_METHOD'] == "POST")
         {
-            session_start();
-            $_SESSION['user_id'] = $user_id;
-            $_SESSION['name'] = $user->firstName . " " . $user->lastName;
-            session_write_close();
-            echo json_encode(['message' => 'You have been registered']);
+            $user = new User($_POST['firstName'], $_POST['secondName'], $_POST['lastName'], $_POST['login'], $_POST['password'], $_POST['email'], $_POST['phone']);
+            $user_id = $user->registerNewUser();
+            if ($user_id)
+            {
+                session_start();
+                $_SESSION['user_id'] = $user_id;
+                $_SESSION['name'] = $user->firstName . " " . $user->lastName;
+                session_write_close();
+                echo json_encode(['message' => 'You have been registered']);
+            }
+            else
+            {
+                echo json_encode(['message' => 'User with this login already exists']);
+            }
         }
         else
         {
-            echo json_encode(['message' => 'User with this login already exists']);
+            header('Location: http://localhost/kursach/server/');
         }
     }
 
     public function logout()
     {
-        session_start();
-        unset($_SESSION['user_id']);
-        unset($_SESSION['name']);
-        session_write_close();
-        header('Location: http://localhost/kursach/server/');
+        if ($_SERVER['REQUEST_METHOD'] == "POST")
+        {
+            session_start();
+            unset($_SESSION['user_id']);
+            unset($_SESSION['name']);
+            session_write_close();
+            header('Location: http://localhost/kursach/server/');
+        }
+        else
+        {
+            header('Location: http://localhost/kursach/server/');
+        }
     }
 
     /*
@@ -153,23 +209,30 @@ class UserController
      */
     public function getBookedFlights()
     {
-        session_start();
-        if ($_POST['period'] == "all")
+        if ($_SERVER['REQUEST_METHOD'] == "POST")
         {
-            $sign = null;
-        }
-        elseif($_POST['period'] == "previous")
-        {
-            $sign = "<";
+            session_start();
+            if ($_POST['period'] == "all")
+            {
+                $sign = null;
+            }
+            elseif($_POST['period'] == "previous")
+            {
+                $sign = "<";
+            }
+            else
+            {
+                $sign = ">";
+            }
+            $flights = User::getFlights($_SESSION['user_id'], $sign);
+            session_write_close();
+
+            echo json_encode(['flights' => $flights]);
         }
         else
         {
-            $sign = ">";
+            header('Location: http://localhost/kursach/server/');
         }
-        $flights = User::getFlights($_SESSION['user_id'], $sign);
-        session_write_close();
-
-        echo json_encode(['flights' => $flights]);
     }
 
     /*
@@ -201,141 +264,195 @@ class UserController
      */
     public function chooseATicket()
     {
-        session_start();
-        $trip = Trip::getTrip($_POST['trip_id']);
-        $passangers = [];
-        for($i = 0;$i < $_POST['defaultCount'];$i++)
+        if ($_SERVER['REQUEST_METHOD'] == "POST")
         {
-            $passangers []= [
-                'type' => 'default'
-            ];
-        }
-        for($i = 0;$i < $_POST['childCount'];$i++)
-        {
-            $passangers []= [
-                'type' => 'child'
-            ];
-        }
-        for($i = 0;$i < $_POST['babyCount'];$i++)
-        {
-            $passangers []= [
-                'type' => 'baby'
-            ];
-        }
+            session_start();
+            $trip = Trip::getTrip($_POST['trip_id']);
+            $passangers = [];
+            for($i = 0;$i < $_POST['defaultCount'];$i++)
+            {
+                $passangers []= [
+                    'type' => 'default'
+                ];
+            }
+            for($i = 0;$i < $_POST['childCount'];$i++)
+            {
+                $passangers []= [
+                    'type' => 'child'
+                ];
+            }
+            for($i = 0;$i < $_POST['babyCount'];$i++)
+            {
+                $passangers []= [
+                    'type' => 'baby'
+                ];
+            }
 
-        $loader = new FilesystemLoader($_SERVER['DOCUMENT_ROOT'] . '/kursach/client/views');
-        $twig = new Environment($loader);
-        $template = $twig->load('chooseTicket.html.twig');
-        echo $template->render([
-            'flight' => $trip,
-            'passangers' => $passangers,
-            'user_id' => $_SESSION['user_id'],
-            'name' => $_SESSION['name'],
-            'class' => $_POST['class'],
-        ]);
-        session_write_close();
+            $loader = new FilesystemLoader($_SERVER['DOCUMENT_ROOT'] . '/kursach/client/views');
+            $twig = new Environment($loader);
+            $template = $twig->load('chooseTicket.html.twig');
+            echo $template->render([
+                'flight' => $trip,
+                'passangers' => $passangers,
+                'user_id' => $_SESSION['user_id'],
+                'name' => $_SESSION['name'],
+                'class' => $_POST['class'],
+            ]);
+            session_write_close();
+        }
+        else
+        {
+            header('Location: http://localhost/kursach/server/');
+        }
     }
 
     public function registerForFlight()
     {
-        $passangersPlaces = [];
-        $freePlaces = Trip::getFreePlaces($_POST['trip_id'], $_POST['class']);
-        $firstPassangerPlace = $freePlaces[0];
-        $passangersPlaces []= $firstPassangerPlace;
-        $placeNumber = $freePlaces[0][1];
-        $letters = ["A", "B", "C", "D"];
-        $letter = $freePlaces[0][0];
-
-        for($i = 1;$i < $_POST['passangersCount'] - 1;$i++)
+        if ($_SERVER['REQUEST_METHOD'] == "POST")
         {
-            if ($placeNumber == 4)
+            $passangersPlaces = [];
+            $freePlaces = Trip::getFreePlaces($_POST['trip_id'], $_POST['class']);
+            $firstPassangerPlace = $freePlaces[0];
+            $passangersPlaces []= $firstPassangerPlace;
+            $placeNumber = $freePlaces[0][1];
+            $letters = ["A", "B", "C", "D"];
+            $letter = $freePlaces[0][0];
+
+            for($i = 1;$i < $_POST['passangersCount'] - 1;$i++)
             {
-                $placeNumber = 1;
-                if (array_search($letter, $letters) == 3)
+                if ($placeNumber == 4)
                 {
-                    $letter = $letters[0];
+                    $placeNumber = 1;
+                    if (array_search($letter, $letters) == 3)
+                    {
+                        $letter = $letters[0];
+                    }
+                    else
+                    {
+                        $letter = $letters[array_search($letter, $letters) + 1];
+                    }
                 }
                 else
                 {
-                    $letter = $letters[array_search($letter, $letters) + 1];
+                    $placeNumber++;
                 }
+                $passangersPlaces []= $letter . $placeNumber;
             }
-            else
+
+            for($counter = 1;$counter < $_POST['passangersCount'];$counter++)
             {
-                $placeNumber++;
+                $passanger_params = [];
+                $passanger_params['firstName'] = $_POST['firstName' . $counter];
+                $passanger_params['secondName'] = $_POST['secondName' . $counter];
+                $passanger_params['lastName'] = $_POST['lastName' . $counter];
+                $passanger_params['passport_num'] = $_POST['passport_num' . $counter];
+                $passanger_params['type'] = $_POST['passanger_type' . $counter];
+                $passanger_params['has_luggage'] = isset($_POST['hasLuggage' . $counter]);
+                $passanger_params['user_id'] = (int) $_POST['user_id'];
+                $passanger_params['trip_id'] = (int) $_POST['trip_id'];
+                $passanger_params['place_num'] = $passangersPlaces[$counter - 1];
+                $passanger_params['class'] = $_POST['class'];
+                Passanger::addPassanger($passanger_params);
             }
-            $passangersPlaces []= $letter . $placeNumber;
-        }
 
-        for($counter = 1;$counter < $_POST['passangersCount'];$counter++)
+            Trip::reduceFreePlacesCount($_POST['trip_id'], $_POST['passangersCount'] - 1, $_POST['class']);
+
+            for($counter = 1;$counter < $_POST['passangersCount'];$counter++)
+            {
+                Trip::takeFlightPlace([
+                    'trip_id' => $_POST['trip_id'],
+                    'class' => $_POST['class'],
+                    'place_num' => $passangersPlaces[$counter - 1]
+                ]);
+            }
+
+            echo json_encode(['message' => 'You have been registered for the flight']);
+        }
+        else
         {
-            $passanger_params = [];
-            $passanger_params['firstName'] = $_POST['firstName' . $counter];
-            $passanger_params['secondName'] = $_POST['secondName' . $counter];
-            $passanger_params['lastName'] = $_POST['lastName' . $counter];
-            $passanger_params['passport_num'] = $_POST['passport_num' . $counter];
-            $passanger_params['type'] = $_POST['passanger_type' . $counter];
-            $passanger_params['has_luggage'] = isset($_POST['hasLuggage' . $counter]);
-            $passanger_params['user_id'] = (int) $_POST['user_id'];
-            $passanger_params['trip_id'] = (int) $_POST['trip_id'];
-            $passanger_params['place_num'] = $passangersPlaces[$counter - 1];
-            $passanger_params['class'] = $_POST['class'];
-            Passanger::addPassanger($passanger_params);
+            header('Location: http://localhost/kursach/server/');
         }
-
-        Trip::reduceFreePlacesCount($_POST['trip_id'], $_POST['passangersCount'] - 1, $_POST['class']);
-
-        for($counter = 1;$counter < $_POST['passangersCount'];$counter++)
-        {
-            Trip::takeFlightPlace([
-                'trip_id' => $_POST['trip_id'],
-                'class' => $_POST['class'],
-                'place_num' => $passangersPlaces[$counter - 1]
-            ]);
-        }
-
-        echo json_encode(['message' => 'You have been registered for the flight']);
     }
 
     public function edit()
     {
-        $user_id = $_POST['user_id'];
+        if ($_SERVER['REQUEST_METHOD'] == "POST")
+        {
+            session_start();
+            $user_id = $_POST['user_id'];
+            $loader = new FilesystemLoader($_SERVER['DOCUMENT_ROOT'] . '/kursach/client/views/user');
+            $twig = new Environment($loader);
+            $template = $twig->load('edit.html.twig');
+            echo $template->render([
+                'user' => User::getUserById($user_id),
+                'user_id' => $_SESSION['user_id'],
+                'name' => $_SESSION['name']
+            ]);
 
-        $loader = new FilesystemLoader($_SERVER['DOCUMENT_ROOT'] . '/kursach/client/views/user');
-        $twig = new Environment($loader);
-        $template = $twig->load('edit.html.twig');
-        echo $template->render([
-            'user' => User::getUserById($user_id)
-        ]);
+            session_write_close();
+        }
+        else
+        {
+            header('Location: http://localhost/kursach/server/');
+        }
     }
 
     public function update()
     {
-        User::updateUser($_POST);
-        header('Location: http://localhost/kursach/server/user/profile');
+        if ($_SERVER['REQUEST_METHOD'] == "POST")
+        {
+            User::updateUser($_POST);
+            header('Location: http://localhost/kursach/server/user/profile');
+        }
+        else
+        {
+            header('Location: http://localhost/kursach/server/');
+        }
     }
 
     public function refuseFromFlight()
     {
-        User::refuseFromFlight($_POST);
-        header('Location: http://localhost/kursach/server/user/profile');
+        if ($_SERVER['REQUEST_METHOD'] == "POST")
+        {
+            User::refuseFromFlight($_POST);
+            header('Location: http://localhost/kursach/server/user/profile');
+        }
+        else
+        {
+            header('Location: http://localhost/kursach/server/');
+        }
     }
 
     public function getTicketPdf()
     {
-        User::getTicketPdf($_POST);
+        if ($_SERVER['REQUEST_METHOD'] == "POST")
+        {
+            User::getTicketPdf($_POST);
+        }
+        else
+        {
+            header('Location: http://localhost/kursach/server/');
+        }
     }
+
     public static function getAllUsers()
     {
-        $users = [];
-        $connection = Database::getInstance();
-        $sql = "SELECT * FROM users";
-        $result = $connection->query($sql);
-        foreach ($result as $row)
+        if ($_SERVER['REQUEST_METHOD'] == "GET")
         {
-            $users [] = $row;
+            header('Location: http://localhost/kursach/server/');
         }
+        else
+        {
+            $users = [];
+            $connection = Database::getInstance();
+            $sql = "SELECT * FROM users";
+            $result = $connection->query($sql);
+            foreach ($result as $row)
+            {
+                $users [] = $row;
+            }
 
-        return $users;
+            return $users;
+        }
     }
 }

@@ -84,6 +84,11 @@ class Router
              'controller' => UserController::class,
              'method' => 'getTicketPdf'
          ],
+         '/user/checkIfAuthorized' =>
+         [
+             'controller' => UserController::class,
+             'method' => 'checkIfAuthorized'
+         ],
          '/flight/getDeparturePoints' =>
          [
              'controller' => FlightController::class,

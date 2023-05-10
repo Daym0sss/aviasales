@@ -5,9 +5,9 @@ function checkBookTicketsForm(event)
     var passports = [];
     for(var i = 1;i <= passangersCount;i++)
     {
-        if(!(passports.includes(document.getElementById("passport_num" + i).value)))
+        if(!(passports.includes(document.getElementById("passport_num" + i).value.trim())))
         {
-            passports.push(document.getElementById("passport_num" + i).value);
+            passports.push(document.getElementById("passport_num" + i).value.trim());
         }
     }
 
@@ -34,29 +34,56 @@ function checkBookTicketsForm(event)
 function checkIfAuthorized(event, user_id)
 {
     event.preventDefault();
-    if (!user_id)
-    {
-        document.getElementById("alertMessageFail").style.display = "block";
-    }
-    else
-    {
-        event.currentTarget.submit();
-    }
+    var form = event.currentTarget;
+    $.ajax({
+        type: "POST",
+        url: "http://localhost/kursach/server/user/checkIfAuthorized",
+        contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+        dataType : "json",
+        data: {},
+        success: function (data)
+        {
+            if (data.data.user_id == null)
+            {
+                document.getElementById("alert-text-fail").innerText = "You are not authorized to book tickets";
+                document.getElementById("alertMessageFail").style.display = "block";
+                document.getElementById("whereToRedirect").innerText = "login";
+            }
+            else if (data.data.role == 1)
+            {
+                document.getElementById("alert-text-fail").innerText = "Your role is admin";
+                document.getElementById("alertMessageFail").style.display = "block";
+                document.getElementById("whereToRedirect").innerText = "index";
+            }
+            else
+            {
+                form.submit();
+            }
+        }
+    });
 }
 
 function agreeNotAuthorized()
 {
-    window.location.href = "http://localhost/kursach/server/login";
+    if (document.getElementById("whereToRedirect").innerText == "index")
+    {
+        window.location.href = "http://localhost/kursach/server/";
+    }
+    else
+    {
+        window.location.href = "http://localhost/kursach/server/login";
+    }
 }
 
-function checkLogout(event)
+function checkLogout()
 {
-    event.preventDefault();
-    var answer = confirm("Are you sure you want to exit your account?");
-    if (answer)
-    {
-        event.currentTarget.submit();
-    }
+    document.getElementById("confirmLogout").style.display = "block";
+}
+
+function logoutUser()
+{
+    document.getElementById("confirmLogout").style.display = "none";
+    document.getElementById("logoutForm").submit();
 }
 
 function loginUser(event)
@@ -241,11 +268,26 @@ function drawBookedFlights(flights, keys)
         var flight_class = passangers[0].class;
         flight_class = flight_class[0].toUpperCase() + flight_class.substr(1);
         body += "<td>" + flight_class + ": " + result_price + " BYN" + "</td>";
-        body += "<td> <form method='post' action='http://localhost/kursach/server/user/refuseFromFlight' onsubmit='confirmFlightRefuse(event)'> <input type='hidden' value='" + flight.trip_information.trip_id + "' name='trip_id'> <input type='hidden' value='" + flight.passangers_information[0].user_id + "' name='user_id'> <input type='submit' class='btn btn-danger' value='Refuse'></form> <br> <form method='post' action='http://localhost/kursach/server/user/getTicketPdf' target='_blank'> <input type='hidden' value='" + flight.trip_information.trip_id + "' name='trip_id'> <input type='hidden' value='" + flight.passangers_information[0].user_id + "' name='user_id'> <input type='submit' class='btn btn-warning' value='Get ticket PDF'></form>  </td>";
+        body += "<td> <form id='refuseForm" + flight.trip_information.trip_id + "'method='post' action='http://localhost/kursach/server/user/refuseFromFlight' onsubmit='checkRefuse()'> <input type='hidden' value='" + flight.trip_information.trip_id + "' name='trip_id'> <input type='hidden' value='" + flight.passangers_information[0].user_id + "' name='user_id'> <input type='submit' class='btn btn-danger' value='Refuse'> </form> <br> <form method='post' action='http://localhost/kursach/server/user/getTicketPdf' target='_blank'> <input type='hidden' value='" + flight.trip_information.trip_id + "' name='trip_id'> <input type='hidden' value='" + flight.passangers_information[0].user_id + "' name='user_id'> <input type='submit' class='btn btn-warning' value='Get ticket PDF'></form>  </td>";
         body += "<tr>";
     }
     body += "</table> <br><br><br>";
     document.getElementById("flightsInformation").innerHTML = body;
+}
+
+function checkRefuse()
+{
+    event.preventDefault();
+    document.getElementById("trip_id_div").innerText = event.currentTarget.elements[0].value;
+    document.getElementById("confirmRefuse").style.display = "block";
+}
+
+function refuse()
+{
+    document.getElementById("confirmRefuse").style.display = 'none';
+    var trip_id = document.getElementById("trip_id_div").innerText;
+    console.log(trip_id);
+    document.getElementById("refuseForm" + trip_id).submit();
 }
 
 function changeFlightPeriod(event)
