@@ -36,13 +36,17 @@ function checkIfAuthorized(event, user_id)
     event.preventDefault();
     if (!user_id)
     {
-        alert("You are not authorized");
-        window.location.href = "http://localhost/kursach/server/login";
+        document.getElementById("alertMessageFail").style.display = "block";
     }
     else
     {
         event.currentTarget.submit();
     }
+}
+
+function agreeNotAuthorized()
+{
+    window.location.href = "http://localhost/kursach/server/login";
 }
 
 function checkLogout(event)
