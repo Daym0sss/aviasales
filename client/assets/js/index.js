@@ -340,12 +340,16 @@ function checkFlightParamsForm(event)
 function confirmTripDelete(event)
 {
     event.preventDefault();
-    var answer = confirm("Are you sure you want to delete this trip?");
-    if (answer)
-    {
-        event.currentTarget.submit();
-    }
+    document.getElementById("trip_id_div").innerText = event.currentTarget.elements[0].value;
+    document.getElementById("confirmDeleteTrip").style.display = "block";
 }
+
+function deleteTrip()
+{
+    document.getElementById("confirmDeleteTrip").style.display = "none";
+    document.getElementById("formDelete" + document.getElementById("trip_id_div").innerText).submit();
+}
+
 
 function confirmFlightRefuse(event)
 {
@@ -355,4 +359,101 @@ function confirmFlightRefuse(event)
     {
         event.currentTarget.submit();
     }
+}
+
+function checkNewTripForm(event)
+{
+    event.preventDefault();
+    var formEl  = event.currentTarget;
+    for(var i = 12;i <= 24;i++)
+    {
+        if (!isNumeric(formEl.elements[i].value))
+        {
+            document.getElementById("alert-text-fail").innerText = "All the prices and places count must be positive numbers";
+            document.getElementById("alertMessageFail").style.display = "block";
+            return;
+        }
+        else
+        {
+            if (parseInt(formEl.elements[i].value) <= 0)
+            {
+                document.getElementById("alert-text-fail").innerText = "All the prices and places count must be positive numbers";
+                document.getElementById("alertMessageFail").style.display = "block";
+                return;
+            }
+        }
+    }
+
+    var departureDate = new Date(formEl.elements[8].value);
+    var arrivalDate = new Date(formEl.elements[10].value);
+    if (arrivalDate < departureDate)
+    {
+        document.getElementById("alert-text-fail").innerText = "Arrival date can not be less than departure date";
+        document.getElementById("alertMessageFail").style.display = "block";
+        return;
+    }
+
+
+    if (formEl.elements[8].value == formEl.elements[10].value)
+    {
+        if (formEl.elements[9].value.substr(0, 5) == formEl.elements[11].value.substr(0, 5))
+        {
+            document.getElementById("alert-text-fail").innerText = "Departure and arrival dates are the same, time can not be the same";
+            document.getElementById("alertMessageFail").style.display = "block";
+            return;
+        }
+    }
+
+    formEl.submit();
+}
+
+function checkUpdateTripForm(event)
+{
+    event.preventDefault();
+    var formEl  = event.currentTarget;
+    for(var i = 6;i <= 15;i++)
+    {
+        if (!isNumeric(formEl.elements[i].value))
+        {
+            document.getElementById("alert-text-fail").innerText = "All the prices must be positive numbers";
+            document.getElementById("alertMessageFail").style.display = "block";
+            return;
+        }
+        else
+        {
+            if (parseInt(formEl.elements[i].value) <= 0)
+            {
+                document.getElementById("alert-text-fail").innerText = "All the prices must be positive numbers";
+                document.getElementById("alertMessageFail").style.display = "block";
+                return;
+            }
+        }
+    }
+
+    var departureDate = new Date(formEl.elements[0].value);
+    var arrivalDate = new Date(formEl.elements[3].value);
+    if (arrivalDate < departureDate)
+    {
+        document.getElementById("alert-text-fail").innerText = "Arrival date can not be less than departure date";
+        document.getElementById("alertMessageFail").style.display = "block";
+        return;
+    }
+
+
+    if (formEl.elements[0].value == formEl.elements[3].value)
+    {
+        if (formEl.elements[1].value.substr(0, 5) == formEl.elements[4].value.substr(0, 5))
+        {
+            document.getElementById("alert-text-fail").innerText = "Departure and arrival dates are the same, time can not be the same";
+            document.getElementById("alertMessageFail").style.display = "block";
+            return;
+        }
+    }
+
+    formEl.submit();
+}
+
+function isNumeric(n)
+{
+    return !isNaN(parseInt(n)) && isFinite(n);
 }

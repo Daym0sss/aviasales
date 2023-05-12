@@ -10,8 +10,73 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="../../client/assets/js/index.js"></script>
 </head>
-<body>
-    <h2>Edit trip information</h2>
+<body style="background-color: white"; class="bg-info">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="http://localhost/kursach/server">Aviasales</a>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="http://localhost/kursach/server/">Home</a>
+                    </li>
+
+
+                    {% if user_id %}
+
+                    {% if role_id == 1 %}
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="http://localhost/kursach/server/admin/main">Admin page</a>
+                        </li>
+                    {% endif %}
+
+                </ul>
+                <form class="d-flex">
+                    <i class="bi bi-person-circle form-control">{{ name }}</i>
+                </form>
+
+
+
+                <form style="margin-left: 5px" class="d-flex" method="post" action="http://localhost/kursach/server/user/profile">
+                    <input type="submit" class="btn btn-outline-dark" id="profileBtn" value="Profile">
+                </form>
+
+                <button style="margin-left: 5px; margin-bottom: 16px" class="btn btn-outline-dark" id="logoutBtn" onclick="checkLogout()">Logout</button>
+
+                {% else %}
+                    </ul>
+                    <form class="d-flex" method="post" action="http://localhost/kursach/server/login">
+                        <input type="submit" class="btn btn-outline-dark" id="profileBtn" value="Login">
+                    </form>
+
+                    <form style="margin-left: 10px" class="d-flex" method="post" action="http://localhost/kursach/server/register">
+                        <input class="btn btn-outline-dark" type="submit" value="Register">
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <div id="confirmLogout" class="modal" tabindex="-1" role="dialog" style="display: none">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content bg-info">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirm your action</h5>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to leave your account?</p>
+                </div>
+                <div class="modal-footer">
+                    <form id="logoutForm" style="margin-left: 10px" class="d-flex" method="post" action="http://localhost/kursach/server/user/logout">
+                    </form>
+                    <button class="btn btn-primary bg-danger" style="margin-right: 2px" onclick="logoutUser()">Yes</button>
+                    <button class="btn btn-secondary bg-primary" data-dismiss="modal" style="margin-right: 180px" onclick="document.getElementById('confirmLogout').style.display = 'none';">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<!-- <h2>Edit trip information</h2>
 
     <form method="post" action="http://localhost/kursach/server/admin/updateTrip">
         <input type="hidden" name="trip_id" value="{{ trip.trip_id }}">
@@ -40,7 +105,277 @@
         <label style="margin-left: 10px">Aviacompany name</label> <input type="text" name="aviaCompany_name" value="{{ trip.aviaCompany_name }}">
         <br><br>
         <input type="submit" value="Update">
-    </form>
+    </form> -->
 
+
+    <section class="" style="margin-top: -15px">
+
+        <div id="alertMessageFail">
+            <div class="alert alert-danger d-flex align-items-center" role="alert" style="width: 30%; margin-left: 1250px">
+                <div class="alert alert-danger d-flex align-items-center" role="alert">
+                    <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+                    <div id="alert-text-fail">
+
+                    </div>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" onclick="document.getElementById('alertMessageFail').style.display = 'none'" style="margin-top: -15px"></button>
+            </div>
+        </div>
+
+        <!-- Jumbotron -->
+        <div class="px-4 py-5 px-md-5 text-center text-lg-start" style="background-color: hsl(0, 0%, 96%)">
+            <div class="container">
+                <div class="row gx-lg-5 align-items-center" style="margin-left: -250px">
+
+                    <div class="col-lg-6 mb-5 mb-lg-0">
+                        <h1 class="my-5 display-3 fw-bold ls-tight">
+                            Edit this field <br />
+                            <span class="text-primary">to update trip information</span>
+                        </h1>
+                        <p style="color: hsl(217, 10%, 50.8%)">
+                            Edit the fields to update trip on our site
+                        </p>
+                    </div>
+
+                    <div class="col-lg-6 mb-5 mb-lg-0">
+
+                        <div class="card" style="width: 900px">
+                            <div class="card-body py-5 px-md-5">
+                                <form method="post" action="http://localhost/kursach/server/admin/updateTrip" onsubmit="checkUpdateTripForm(event)">
+                                    <!-- 2 column grid layout with text inputs for the first and last names -->
+                                    <div class="row">
+                                        <div class="col-md-3 mb-4">
+                                            <div class="form-outline">
+                                                <input type="date" id="form3Example1" class="form-control" name="departure_date" value="{{ trip.departure_date }}" required/>
+                                                <label class="form-label" for="form3Example1">Departure date</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 mb-4">
+                                            <div class="form-outline">
+                                                <input type="time" id="form3Example2" class="form-control" name="departure_time" value="{{ trip.departure_time }}" required/>
+                                                <label class="form-label" for="form3Example2">Departure time</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 mb-4">
+                                            <div class="form-outline">
+                                                <input type="text" id="form3Example3" class="form-control" name="departure_terminal" value="{{ trip.departure_terminal }}" required/>
+                                                <label class="form-label" for="form3Example3">Departure terminal</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-3 mb-4">
+                                            <div class="form-outline">
+                                                <input type="date" id="form3Example1" class="form-control" name="arrival_date" value="{{ trip.arrival_date }}" required/>
+                                                <label class="form-label" for="form3Example1">Arrival date</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 mb-4">
+                                            <div class="form-outline">
+                                                <input type="time" id="form3Example2" class="form-control" name="arrival_time" value="{{ trip.arrival_time }}" required/>
+                                                <label class="form-label" for="form3Example2">Arrival time</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 mb-4">
+                                            <div class="form-outline">
+                                                <input type="text" id="form3Example3" class="form-control" name="arrival_terminal" value="{{ trip.arrival_terminal  }}" required/>
+                                                <label class="form-label" for="form3Example3">Arrival terminal</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="row">
+                                        <div class="col-md-3 mb-4">
+                                            <div class="form-outline">
+                                                <input type="text" id="form3Example2" class="form-control" name="econom_place_price_default" value="{{ trip.econom_place_price_default }}" required/>
+                                                <label class="form-label" for="form3Example2">Econom place price adult</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 mb-4">
+                                            <div class="form-outline">
+                                                <input type="text" id="form3Example3" class="form-control" name="econom_place_price_child" value="{{ trip.econom_place_price_child  }}" required/>
+                                                <label class="form-label" for="form3Example3">Econom place price child</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2 mb-4">
+                                            <div class="form-outline">
+                                                <input type="text" id="form3Example3" class="form-control" name="econom_place_price_baby" value="{{ trip.econom_place_price_baby  }}" required/>
+                                                <label class="form-label" for="form3Example3">Econom place price baby</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="row">
+                                        <div class="col-md-3 mb-4">
+                                            <div class="form-outline">
+                                                <input type="text" id="form3Example2" class="form-control" name="comfort_place_price_default" value="{{ trip.comfort_place_price_default  }}" required/>
+                                                <label class="form-label" for="form3Example2">Comfort place price adult</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 mb-4">
+                                            <div class="form-outline">
+                                                <input type="text" id="form3Example3" class="form-control" name="comfort_place_price_child" value="{{ trip.comfort_place_price_child }}" required/>
+                                                <label class="form-label" for="form3Example3">Comfort place price child</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2 mb-4">
+                                            <div class="form-outline">
+                                                <input type="text" id="form3Example3" class="form-control" name="comfort_place_price_baby" value="{{ trip.comfort_place_price_baby }}" required/>
+                                                <label class="form-label" for="form3Example3">Comfort place price baby</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-3 mb-4">
+                                            <div class="form-outline">
+                                                <input type="text" id="form3Example2" class="form-control" name="business_place_price_default" value="{{ trip.business_place_price_default }}" required/>
+                                                <label class="form-label" for="form3Example2">Business place price adult</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 mb-4">
+                                            <div class="form-outline">
+                                                <input type="text" id="form3Example3" class="form-control" name="business_place_price_child" value="{{ trip.business_place_price_child }}" required/>
+                                                <label class="form-label" for="form3Example3">Business place price child</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2 mb-4">
+                                            <div class="form-outline">
+                                                <input type="text" id="form3Example3" class="form-control" name="business_place_price_baby" value="{{ trip.business_place_price_baby }}" required/>
+                                                <label class="form-label" for="form3Example3">Business place price baby</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-3 mb-4">
+                                            <div class="form-outline">
+                                                <input type="text" id="form3Example1" class="form-control" name="luggage_price" value="{{ trip.luggage_price }}" required/>
+                                                <label class="form-label" for="form3Example1">Luggage price</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 mb-4">
+                                            <div class="form-outline">
+                                                <input type="text" id="form3Example2" class="form-control" name="aviaCompany_name" value="{{ trip.aviaCompany_name }}" required/>
+                                                <label class="form-label" for="form3Example2">Aviacompany name</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <input type="hidden" name="trip_id" value="{{ trip.trip_id }}">
+
+                                    <!-- Submit button -->
+                                    <button type="submit" class="btn btn-primary btn-block mb-4">
+                                        Update trip
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Jumbotron -->
+    </section>
+
+
+    <footer class="text-center text-lg-start bg-primary text-dark" style="margin-top: 0px">
+        <!-- Section: Social media -->
+        <section class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom">
+            <!-- Left -->
+            <div class="me-5 d-none d-lg-block">
+                <h6 style="margin-left: 800px; padding-top: 20px" class="text-uppercase fw-bold mb-4">Additional info</h6>
+            </div>
+            <!-- Left -->
+        </section>
+        <!-- Section: Social media -->
+
+        <!-- Section: Links  -->
+        <section class="">
+            <div class="container text-center text-md-start mt-5">
+                <!-- Grid row -->
+                <div class="row mt-3">
+                    <!-- Grid column -->
+                    <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
+                        <!-- Content -->
+                        <h6 class="text-uppercase fw-bold mb-4">
+                            <i class="fas fa-gem me-3"></i>Company name
+                        </h6>
+                        <p>
+                            Aviasales is one of the best sites for searching and booking places for flights all around the world
+                        </p>
+                    </div>
+                    <!-- Grid column -->
+
+                    <!-- Grid column -->
+                    <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
+                        <!-- Links -->
+                        <h6 class="text-uppercase fw-bold mb-4">
+                            Products
+                        </h6>
+                        <p>
+                            <span class="text-reset">Laravel</span>
+                        </p>
+                        <p>
+                            <span class="text-reset">Symfony</span>
+                        </p>
+                        <p>
+                            <span class="text-reset">Zend</span>
+                        </p>
+                        <p>
+                            <span class="text-reset">Drupal</span>
+                        </p>
+                    </div>
+                    <!-- Grid column -->
+
+                    <!-- Grid column -->
+                    <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
+                        <!-- Links -->
+                        <h6 class="text-uppercase fw-bold mb-4">
+                            Useful links
+                        </h6>
+                        <p>
+                            <a href="https://developer.mozilla.org/en-US/" class="text-reset">MDN docs</a>
+                        </p>
+                        <p>
+                            <a href="https://www.php.net/docs.php" class="text-reset">PHP docs</a>
+                        </p>
+                        <p>
+                            <a href="https://dev.mysql.com/doc/" class="text-reset">MySQL docs</a>
+                        </p>
+                        <p>
+                            <a href="https://getbootstrap.com/docs/5.0/getting-started/introduction/" class="text-reset">Bootstrap docs</a>
+                        </p>
+                    </div>
+                    <!-- Grid column -->
+
+                    <!-- Grid column -->
+                    <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
+                        <!-- Links -->
+                        <h6 class="text-uppercase fw-bold mb-4">Contact</h6>
+                        <p><i class="fas fa-home me-3"></i> New York, NY 10012, US</p>
+                        <p>
+                            <i class="fas fa-envelope me-3"></i>
+                            aviasales@enterprise.com
+                        </p>
+                        <p><i class="fas fa-phone me-3"></i> + 01 234 567 88</p>
+                        <p><i class="fas fa-print me-3"></i> + 01 234 567 89</p>
+                    </div>
+                    <!-- Grid column -->
+                </div>
+                <!-- Grid row -->
+            </div>
+        </section>
+        <!-- Section: Links  -->
+
+        <!-- Copyright -->
+        <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
+            © 2023 Copyright: Aviasales.com
+        </div>
+        <!-- Copyright -->
+    </footer>
 </body>
 </html>

@@ -10,117 +10,470 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="../../client/assets/js/index.js"></script>
 </head>
-<body>
-<h2>Trips information</h2>
-    <table border="1">
-        <tr>
-            <th>Actions</th>
-            <th>Trip ID</th>
-            <th>Departure country</th>
-            <th>Departure city</th>
-            <th>Departure airport</th>
-            <th>Departure terminal</th>
-            <th>Departure date</th>
-            <th>Departure time</th>
-            <th>Arrival country</th>
-            <th>Arrival city</th>
-            <th>Arrival airport</th>
-            <th>Arrival terminal</th>
-            <th>Arrival date</th>
-            <th>Arrival time</th>
-            <th>Luggage price</th>
-            <th>General econom places count</th>
-            <th>Left econom places count</th>
-            <th>Econom place price for adult</th>
-            <th>Econom place price for child</th>
-            <th>Econom place price for baby</th>
-            <th>General comfort places count</th>
-            <th>Left comfort places count</th>
-            <th>Comfort place price for adult</th>
-            <th>Comfort place price for child</th>
-            <th>Comfort place price for baby</th>
-            <th>General business places count</th>
-            <th>Left business places count</th>
-            <th>Business place price for adult</th>
-            <th>Business place price for child</th>
-            <th>Business place price for baby</th>
-            <th>Aviacompany name</th>
-        </tr>
-        {% for trip in trips %}
-            <tr>
-                <th>
-                    <form method="post" action="http://localhost/kursach/server/admin/editTrip">
-                        <input type="hidden" name="trip_id" value="{{ trip.trip_id }}">
-                        <input type="submit" value="Edit trip">
-                    </form>
-                    <form method="post" action="http://localhost/kursach/server/admin/deleteTrip" onsubmit="confirmTripDelete(event)">
-                        <input type="hidden" name="trip_id" value="{{ trip.trip_id }}">
-                        <input type="submit" value="Delete trip">
-                    </form>
-                </th>
-                <th>{{ trip.trip_id }}</th>
-                <th>{{ trip.departure_country }}</th>
-                <th>{{ trip.departure_city }}</th>
-                <th>{{ trip.departure_airport }}</th>
-                <th>{{ trip.departure_terminal }}</th>
-                <th>{{ trip.departure_date }}</th>
-                <th>{{ trip.departure_time }}</th>
-                <th>{{ trip.arrival_country }}</th>
-                <th>{{ trip.arrival_city }}</th>
-                <th>{{ trip.arrival_airport }}</th>
-                <th>{{ trip.arrival_terminal }}</th>
-                <th>{{ trip.arrival_date }}</th>
-                <th>{{ trip.arrival_time }}</th>
-                <th>{{ trip.luggage_price }} BYN</th>
-                <th>{{ trip.general_econom_places_count }}</th>
-                <th>{{ trip.left_econom_places_count }}</th>
-                <th>{{ trip.econom_place_price_default }}</th>
-                <th>{{ trip.econom_place_price_child }}</th>
-                <th>{{ trip.econom_place_price_baby }}</th>
-                <th>{{ trip.general_comfort_places_count }}</th>
-                <th>{{ trip.left_comfort_places_count }}</th>
-                <th>{{ trip.comfort_place_price_default }}</th>
-                <th>{{ trip.comfort_place_price_child }}</th>
-                <th>{{ trip.comfort_place_price_baby }}</th>
-                <th>{{ trip.general_business_places_count }}</th>
-                <th>{{ trip.left_business_places_count }}</th>
-                <th>{{ trip.business_place_price_default }}</th>
-                <th>{{ trip.business_place_price_child }}</th>
-                <th>{{ trip.business_place_price_baby }}</th>
-                <th>{{ trip.aviaCompany_name }}</th>
-            </tr>
-        {% endfor %}
-    </table>
+<body style="background-color: white" class="bg-info">
 
-    <h2>Create new trip</h2>
-    <form method="post" action="http://localhost/kursach/server/admin/addTrip">
-        <label>Departure country</label> <input type="text" name="departure_country">
-        <label style="margin-left: 10px">Departure city</label> <input type="text" name="departure_city">
-        <label style="margin-left: 10px">Departure airport</label> <input type="text" name="departure_airport">
-        <label style="margin-left: 10px">Departure terminal</label> <input type="text" name="departure_terminal">
-        <label style="margin-left: 10px">Departure date</label> <input type="date" name="departure_date">
-        <label style="margin-left: 10px">Departure time</label> <input type="time" name="departure_time"> <br><br>
-        <label>Arrival country</label> <input type="text" name="arrival_country">
-        <label style="margin-left: 25px">Arrival city</label> <input type="text" name="arrival_city">
-        <label style="margin-left: 25px">Arrival airport</label> <input type="text" name="arrival_airport">
-        <label style="margin-left: 25px">Arrival terminal</label> <input type="text" name="arrival_terminal">
-        <label style="margin-left: 25px">Arrival date</label> <input type="date" name="arrival_date">
-        <label style="margin-left: 25px">Arrival time</label> <input type="time" name="arrival_time"> <br><br>
-        <label>Luggage price</label> <input type="text" name="luggage_price"> <br><br>
-        <label>General econom places count</label> <input type="text" name="general_econom_places_count">
-        <label style="margin-left: 10px">Econom place price for adult</label> <input type="text" name="econom_place_price_default">
-        <label style="margin-left: 10px">Econom place price for child</label> <input type="text" name="econom_place_price_child">
-        <label style="margin-left: 10px">Econom place price for baby</label> <input type="text" name="econom_place_price_baby"> <br><br>
-        <label>General comfort places count</label> <input type="text" name="general_comfort_places_count">
-        <label style="margin-left: 10px">Comfort place price for adult</label> <input type="text" name="comfort_place_price_default">
-        <label style="margin-left: 10px">Comfort place price for child</label> <input type="text" name="comfort_place_price_child">
-        <label style="margin-left: 10px">Comfort place price for baby</label> <input type="text" name="comfort_place_price_baby"> <br><br>
-        <label>General business places count</label> <input type="text" name="general_business_places_count">
-        <label style="margin-left: 7px">Business place price for adult</label> <input type="text" name="business_place_price_default">
-        <label style="margin-left: 7px">Business place price for child</label> <input type="text" name="business_place_price_child">
-        <label style="margin-left: 7px">Business place price for baby</label> <input type="text" name="business_place_price_baby"> <br><br>
-        <label>Aviacompany name</label> <input type="text" name="aviaCompany_name"> <br><br>
-        <input type="submit" value="Create trip">
-    </form>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="http://localhost/kursach/server">Aviasales</a>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="http://localhost/kursach/server/">Home</a>
+                    </li>
+
+
+                    {% if user_id %}
+
+                    {% if role_id == 1 %}
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="http://localhost/kursach/server/admin/main">Admin page</a>
+                        </li>
+                    {% endif %}
+
+                </ul>
+                <form class="d-flex">
+                    <i class="bi bi-person-circle form-control">{{ name }}</i>
+                </form>
+
+
+
+                <form style="margin-left: 5px" class="d-flex" method="post" action="http://localhost/kursach/server/user/profile">
+                    <input type="submit" class="btn btn-outline-dark" id="profileBtn" value="Profile">
+                </form>
+
+                <button style="margin-left: 5px; margin-bottom: 16px" class="btn btn-outline-dark" id="logoutBtn" onclick="checkLogout()">Logout</button>
+
+                {% else %}
+                    </ul>
+                    <form class="d-flex" method="post" action="http://localhost/kursach/server/login">
+                        <input type="submit" class="btn btn-outline-dark" id="profileBtn" value="Login">
+                    </form>
+
+                    <form style="margin-left: 10px" class="d-flex" method="post" action="http://localhost/kursach/server/register">
+                        <input class="btn btn-outline-dark" type="submit" value="Register">
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <div id="confirmLogout" class="modal" tabindex="-1" role="dialog" style="display: none">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content bg-info">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirm your action</h5>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to leave your account?</p>
+                </div>
+                <div class="modal-footer">
+                    <form id="logoutForm" style="margin-left: 10px" class="d-flex" method="post" action="http://localhost/kursach/server/user/logout">
+                    </form>
+                    <button class="btn btn-primary bg-danger" style="margin-right: 2px" onclick="logoutUser()">Yes</button>
+                    <button class="btn btn-secondary bg-primary" data-dismiss="modal" style="margin-right: 180px" onclick="document.getElementById('confirmLogout').style.display = 'none';">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="confirmDeleteTrip" class="modal" tabindex="-1" role="dialog" style="display: none">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content bg-info">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirm your action</h5>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete this trip?</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary bg-danger" style="margin-right: 2px" onclick="deleteTrip()">Yes</button>
+                    <button class="btn btn-secondary bg-primary" data-dismiss="modal" style="margin-right: 180px" onclick="document.getElementById('confirmDeleteTrip').style.display = 'none';">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="trip_id_div" style="display: none">
+
+    </div>
+
+<h2 style="margin-left: 800px">Trips information</h2>
+    {% if trips %}
+        <table class="table table-dark table-hover table-bordered">
+            <tr>
+                <th style="width: 0.05%">Actions</th>
+                <th style="width: 1%">Trip ID</th>
+                <th style="width: 2%">Departure point</th>
+                <th style="width: 0.5%">Departure date / time</th>
+                <th style="width: 2%">Arrival point</th>
+                <th style="width: 0.5%">Arrival date / time</th>
+                <th style="width: 0.3%">Luggage price</th>
+                <th style="width: 0.3%">Econom (general / left)</th>
+                <th style="width: 1%">Econom price (adult / child / baby)</th>
+                <th style="width: 0.3%">Comfort (general / left)</th>
+                <th style="width: 1%">Comfort price (adult / child / baby)</th>
+                <th style="width: 0.3%">Business (general / left)</th>
+                <th style="width: 1%">Business price (adult / child / baby)</th>
+                <th style="width: 1%">Aviacompany name</th>
+            </tr>
+            {% for trip in trips %}
+                <tr>
+                    <th>
+                        <form method="post" action="http://localhost/kursach/server/admin/editTrip">
+                            <input type="hidden" name="trip_id" value="{{ trip.trip_id }}">
+                            <input type="submit" class="btn btn-warning" value="Edit trip">
+                        </form>
+                        <form method="post" id="formDelete{{ trip.trip_id }}" action="http://localhost/kursach/server/admin/deleteTrip" onsubmit="confirmTripDelete(event)">
+                            <input type="hidden" name="trip_id" value="{{ trip.trip_id }}">
+                            <input type="submit" class="btn btn-danger" value="Delete trip">
+                        </form>
+                    </th>
+                    <th>{{ trip.trip_id }}</th>
+                    <th>{{ trip.departure_country }} <br> {{ trip.departure_city }} <br> {{ trip.departure_airport }}  <br> Terminal {{ trip.departure_terminal }} </th>
+                    <th>{{ trip.departure_date }} <br> {{ trip.departure_time }} </th>
+                    <th>{{ trip.arrival_country }} <br> {{ trip.arrival_city }} <br> {{ trip.arrival_airport }}  <br> Terminal {{ trip.arrival_terminal }} </th>
+                    <th>{{ trip.arrival_date }} <br> {{ trip.arrival_time }} </th>
+                    <th>{{ trip.luggage_price }} BYN</th>
+                    <th>{{ trip.general_econom_places_count }} <br> {{ trip.left_econom_places_count }} </th>
+                    <th>{{ trip.econom_place_price_default }} BYN <br> {{ trip.econom_place_price_child }} BYN <br> {{ trip.econom_place_price_baby }} BYN </th>
+                    <th>{{ trip.general_comfort_places_count }} <br> {{ trip.left_comfort_places_count }} </th>
+                    <th>{{ trip.comfort_place_price_default }} BYN <br> {{ trip.comfort_place_price_child }} BYN <br> {{ trip.comfort_place_price_baby }} BYN </th>
+                    <th>{{ trip.general_business_places_count }} <br> {{ trip.left_business_places_count }} </th>
+                    <th>{{ trip.business_place_price_default }} BYN <br> {{ trip.business_place_price_child }} BYN <br> {{ trip.business_place_price_baby }} BYN </th>
+                    <th>{{ trip.aviaCompany_name }}</th>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <h2>No trips exist</h2>
+    {% endif %}
+
+
+    <section class="" style="margin-top: -15px">
+
+        <div id="alertMessageFail">
+            <div class="alert alert-danger d-flex align-items-center" role="alert" style="width: 30%; margin-left: 1250px">
+                <div class="alert alert-danger d-flex align-items-center" role="alert">
+                    <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+                    <div id="alert-text-fail">
+
+                    </div>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" onclick="document.getElementById('alertMessageFail').style.display = 'none'" style="margin-top: -15px"></button>
+            </div>
+        </div>
+
+        <!-- Jumbotron -->
+        <div class="px-4 py-5 px-md-5 text-center text-lg-start" style="background-color: hsl(0, 0%, 96%)">
+            <div class="container">
+                <div class="row gx-lg-5 align-items-center" style="margin-left: -250px">
+
+                    <div class="col-lg-6 mb-5 mb-lg-0">
+                        <h1 class="my-5 display-3 fw-bold ls-tight">
+                            Create new trip <br />
+                            <span class="text-primary">for our users</span>
+                        </h1>
+                        <p style="color: hsl(217, 10%, 50.8%)">
+                            Fulfil the fields to create new trip on our site
+                        </p>
+                    </div>
+
+                    <div class="col-lg-6 mb-5 mb-lg-0">
+
+                        <div class="card" style="width: 900px">
+                            <div class="card-body py-5 px-md-5">
+                                <form method="post" action="http://localhost/kursach/server/admin/addTrip" onsubmit="checkNewTripForm(event)">
+                                    <!-- 2 column grid layout with text inputs for the first and last names -->
+                                    <div class="row">
+                                        <div class="col-md-3 mb-4">
+                                            <div class="form-outline">
+                                                <input type="text" id="form3Example1" class="form-control" name="departure_country" required/>
+                                                <label class="form-label" for="form3Example1">Departure country</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 mb-4">
+                                            <div class="form-outline">
+                                                <input type="text" id="form3Example2" class="form-control" name="departure_city" required/>
+                                                <label class="form-label" for="form3Example2">Departure city</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 mb-4">
+                                            <div class="form-outline">
+                                                <input type="text" id="form3Example3" class="form-control" name="departure_airport" required/>
+                                                <label class="form-label" for="form3Example3">Departure airport</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2 mb-4">
+                                            <div class="form-outline">
+                                                <input type="text" id="form3Example3" class="form-control" name="departure_terminal" required/>
+                                                <label class="form-label" for="form3Example3">Departure terminal</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="row">
+                                            <div class="col-md-3 mb-4">
+                                                <div class="form-outline">
+                                                    <input type="text" id="form3Example1" class="form-control" name="arrival_country" required/>
+                                                    <label class="form-label" for="form3Example1">Arrival country</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 mb-4" style="margin-left: 7px">
+                                                <div class="form-outline">
+                                                    <input type="text" id="form3Example2" class="form-control" name="arrival_city" required/>
+                                                    <label class="form-label" for="form3Example2">Arrival city</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 mb-4" style="margin-left: 6px">
+                                                <div class="form-outline">
+                                                    <input type="text" id="form3Example3" class="form-control" name="arrival_airport" required/>
+                                                    <label class="form-label" for="form3Example3">Arrival airport</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2 mb-4" style="margin-left: 3px">
+                                                <div class="form-outline">
+                                                    <input type="text" id="form3Example3" class="form-control" name="arrival_terminal" required/>
+                                                    <label class="form-label" for="form3Example3">Arrival terminal</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-3 mb-4">
+                                            <div class="form-outline">
+                                                <input type="date" id="form3Example1" class="form-control" name="departure_date" required/>
+                                                <label class="form-label" for="form3Example1">Departure date</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 mb-4">
+                                            <div class="form-outline">
+                                                <input type="time" id="form3Example2" class="form-control" name="departure_time" required/>
+                                                <label class="form-label" for="form3Example2">Departure time</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 mb-4">
+                                            <div class="form-outline">
+                                                <input type="date" id="form3Example3" class="form-control" name="arrival_date" required/>
+                                                <label class="form-label" for="form3Example3">Arrival date</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 mb-4">
+                                            <div class="form-outline">
+                                                <input type="time" id="form3Example3" class="form-control" name="arrival_time" required/>
+                                                <label class="form-label" for="form3Example3">Arrival time</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-3 mb-4">
+                                            <div class="form-outline">
+                                                <input type="text" id="form3Example1" class="form-control" name="general_econom_places_count" required/>
+                                                <label class="form-label" for="form3Example1">General econom places count</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 mb-4">
+                                            <div class="form-outline">
+                                                <input type="text" id="form3Example2" class="form-control" name="econom_place_price_default" required/>
+                                                <label class="form-label" for="form3Example2">Econom place price adult</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 mb-4">
+                                            <div class="form-outline">
+                                                <input type="text" id="form3Example3" class="form-control" name="econom_place_price_child" required/>
+                                                <label class="form-label" for="form3Example3">Econom place price child</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2 mb-4">
+                                            <div class="form-outline">
+                                                <input type="text" id="form3Example3" class="form-control" name="econom_place_price_baby" required/>
+                                                <label class="form-label" for="form3Example3">Econom place price baby</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="row">
+                                        <div class="col-md-3 mb-4">
+                                            <div class="form-outline">
+                                                <input type="text" id="form3Example1" class="form-control" name="general_comfort_places_count" required/>
+                                                <label class="form-label" for="form3Example1">General comfort places count</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 mb-4">
+                                            <div class="form-outline">
+                                                <input type="text" id="form3Example2" class="form-control" name="comfort_place_price_default" required/>
+                                                <label class="form-label" for="form3Example2">Comfort place price adult</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 mb-4">
+                                            <div class="form-outline">
+                                                <input type="text" id="form3Example3" class="form-control" name="comfort_place_price_child" required/>
+                                                <label class="form-label" for="form3Example3">Comfort place price child</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2 mb-4">
+                                            <div class="form-outline">
+                                                <input type="text" id="form3Example3" class="form-control" name="comfort_place_price_baby" required/>
+                                                <label class="form-label" for="form3Example3">Comfort place price baby</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-3 mb-4">
+                                            <div class="form-outline">
+                                                <input type="text" id="form3Example1" class="form-control" name="general_business_places_count" required/>
+                                                <label class="form-label" for="form3Example1">General business places count</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 mb-4">
+                                            <div class="form-outline">
+                                                <input type="text" id="form3Example2" class="form-control" name="business_place_price_default" required/>
+                                                <label class="form-label" for="form3Example2">Business place price adult</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 mb-4">
+                                            <div class="form-outline">
+                                                <input type="text" id="form3Example3" class="form-control" name="business_place_price_child" required/>
+                                                <label class="form-label" for="form3Example3">Business place price child</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2 mb-4">
+                                            <div class="form-outline">
+                                                <input type="text" id="form3Example3" class="form-control" name="business_place_price_baby" required/>
+                                                <label class="form-label" for="form3Example3">Business place price baby</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-3 mb-4">
+                                            <div class="form-outline">
+                                                <input type="text" id="form3Example1" class="form-control" name="luggage_price" required/>
+                                                <label class="form-label" for="form3Example1">Luggage price</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 mb-4">
+                                            <div class="form-outline">
+                                                <input type="text" id="form3Example2" class="form-control" name="aviaCompany_name" required/>
+                                                <label class="form-label" for="form3Example2">Aviacompany name</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Submit button -->
+                                    <button type="submit" class="btn btn-primary btn-block mb-4">
+                                        Create trip
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Jumbotron -->
+    </section>
+
+
+    <footer class="text-center text-lg-start bg-primary text-dark" style="margin-top: 0px">
+        <!-- Section: Social media -->
+        <section class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom">
+            <!-- Left -->
+            <div class="me-5 d-none d-lg-block">
+                <h6 style="margin-left: 800px; padding-top: 20px" class="text-uppercase fw-bold mb-4">Additional info</h6>
+            </div>
+            <!-- Left -->
+        </section>
+        <!-- Section: Social media -->
+
+        <!-- Section: Links  -->
+        <section class="">
+            <div class="container text-center text-md-start mt-5">
+                <!-- Grid row -->
+                <div class="row mt-3">
+                    <!-- Grid column -->
+                    <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
+                        <!-- Content -->
+                        <h6 class="text-uppercase fw-bold mb-4">
+                            <i class="fas fa-gem me-3"></i>Company name
+                        </h6>
+                        <p>
+                            Aviasales is one of the best sites for searching and booking places for flights all around the world
+                        </p>
+                    </div>
+                    <!-- Grid column -->
+
+                    <!-- Grid column -->
+                    <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
+                        <!-- Links -->
+                        <h6 class="text-uppercase fw-bold mb-4">
+                            Products
+                        </h6>
+                        <p>
+                            <span class="text-reset">Laravel</span>
+                        </p>
+                        <p>
+                            <span class="text-reset">Symfony</span>
+                        </p>
+                        <p>
+                            <span class="text-reset">Zend</span>
+                        </p>
+                        <p>
+                            <span class="text-reset">Drupal</span>
+                        </p>
+                    </div>
+                    <!-- Grid column -->
+
+                    <!-- Grid column -->
+                    <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
+                        <!-- Links -->
+                        <h6 class="text-uppercase fw-bold mb-4">
+                            Useful links
+                        </h6>
+                        <p>
+                            <a href="https://developer.mozilla.org/en-US/" class="text-reset">MDN docs</a>
+                        </p>
+                        <p>
+                            <a href="https://www.php.net/docs.php" class="text-reset">PHP docs</a>
+                        </p>
+                        <p>
+                            <a href="https://dev.mysql.com/doc/" class="text-reset">MySQL docs</a>
+                        </p>
+                        <p>
+                            <a href="https://getbootstrap.com/docs/5.0/getting-started/introduction/" class="text-reset">Bootstrap docs</a>
+                        </p>
+                    </div>
+                    <!-- Grid column -->
+
+                    <!-- Grid column -->
+                    <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
+                        <!-- Links -->
+                        <h6 class="text-uppercase fw-bold mb-4">Contact</h6>
+                        <p><i class="fas fa-home me-3"></i> New York, NY 10012, US</p>
+                        <p>
+                            <i class="fas fa-envelope me-3"></i>
+                            aviasales@enterprise.com
+                        </p>
+                        <p><i class="fas fa-phone me-3"></i> + 01 234 567 88</p>
+                        <p><i class="fas fa-print me-3"></i> + 01 234 567 89</p>
+                    </div>
+                    <!-- Grid column -->
+                </div>
+                <!-- Grid row -->
+            </div>
+        </section>
+        <!-- Section: Links  -->
+
+        <!-- Copyright -->
+        <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
+            © 2023 Copyright: Aviasales.com
+        </div>
+        <!-- Copyright -->
+    </footer>
 </body>
 </html>

@@ -4,6 +4,7 @@ namespace controllers;
 
 
 use models\Trip;
+use models\User;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
@@ -84,6 +85,14 @@ class FlightController
                     + $flights[$i][$flight_class_places_variable . "_baby"] * $_POST['babyCount'];
             }
 
+            if (isset($_SESSION['user_id']))
+            {
+                $role_id = User::getUserById($_SESSION['user_id'])['role_id'];
+            }
+            else
+            {
+                $role_id = null;
+            }
             $loader = new FilesystemLoader($_SERVER['DOCUMENT_ROOT'] . '/kursach/client/views');
             $twig = new Environment($loader);
             $template = $twig->load('flightsFound.html.twig');
@@ -91,6 +100,7 @@ class FlightController
                 'flights' => $flights,
                 'user_id' => isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null,
                 'name' => isset($_SESSION['name']) ? $_SESSION['name'] : null,
+                'role_id' => $role_id,
                 'defaultCount' => $_POST['defaultCount'],
                 'childCount' => $_POST['childCount'],
                 'babyCount' => $_POST['babyCount'],

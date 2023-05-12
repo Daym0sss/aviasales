@@ -55,7 +55,8 @@ class UserController
             echo $template->render([
                 'user' => $user,
                 'user_id' => $_SESSION['user_id'],
-                'name' => $_SESSION['name']
+                'name' => $_SESSION['name'],
+                'role_id' => $user['role_id']
             ]);
             session_write_close();
         }
@@ -94,26 +95,58 @@ class UserController
     public function getLoginPage()
     {
         session_start();
-        $loader = new FilesystemLoader($_SERVER['DOCUMENT_ROOT'] . '/kursach/client/views/user');
-        $twig = new Environment($loader);
-        $template = $twig->load('login.html.twig');
-        echo $template->render([
-            'user_id' => isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null,
-            'name' => isset($_SESSION['name']) ? $_SESSION['name'] : null,
-        ]);
-        session_write_close();
+        if (isset($_SESSION['user_id']))
+        {
+            $role_id = User::getUserById($_SESSION['user_id'])['role_id'];
+        }
+        else
+        {
+            $role_id = null;
+        }
+        if ($_SERVER["REQUEST_METHOD"] == "POST")
+        {
+            $loader = new FilesystemLoader($_SERVER['DOCUMENT_ROOT'] . '/kursach/client/views/user');
+            $twig = new Environment($loader);
+            $template = $twig->load('login.html.twig');
+            echo $template->render([
+                'user_id' => isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null,
+                'name' => isset($_SESSION['name']) ? $_SESSION['name'] : null,
+                'role_id' => $role_id
+            ]);
+            session_write_close();
+        }
+        else
+        {
+            header('Location: http://localhost/kursach/server/');
+        }
     }
 
     public function getRegisterPage()
     {
         session_start();
-        $loader = new FilesystemLoader($_SERVER['DOCUMENT_ROOT'] . '/kursach/client/views/user');
-        $twig = new Environment($loader);
-        $template = $twig->load('register.html.twig');
-        echo $template->render([
-            'user_id' => isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null,
-            'name' => isset($_SESSION['name']) ? $_SESSION['name'] : null,
-        ]);
+        if (isset($_SESSION['user_id']))
+        {
+            $role_id = User::getUserById($_SESSION['user_id'])['role_id'];
+        }
+        else
+        {
+            $role_id = null;
+        }
+        if ($_SERVER["REQUEST_METHOD"] == "POST")
+        {
+            $loader = new FilesystemLoader($_SERVER['DOCUMENT_ROOT'] . '/kursach/client/views/user');
+            $twig = new Environment($loader);
+            $template = $twig->load('register.html.twig');
+            echo $template->render([
+                'user_id' => isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null,
+                'name' => isset($_SESSION['name']) ? $_SESSION['name'] : null,
+                'role_id' => $role_id
+            ]);
+        }
+        else
+        {
+            header('Location: http://localhost/kursach/server/');
+        }
         session_write_close();
     }
 
@@ -295,6 +328,7 @@ class UserController
                 'flight' => $trip,
                 'passangers' => $passangers,
                 'user_id' => $_SESSION['user_id'],
+                'role_id' => User::getUserById($_SESSION['user_id'])['role_id'],
                 'name' => $_SESSION['name'],
                 'class' => $_POST['class'],
             ]);
@@ -437,7 +471,7 @@ class UserController
 
     public static function getAllUsers()
     {
-        if ($_SERVER['REQUEST_METHOD'] == "GET")
+        if (!isset(debug_backtrace(!DEBUG_BACKTRACE_PROVIDE_OBJECT|DEBUG_BACKTRACE_IGNORE_ARGS,2)[1]['function']))
         {
             header('Location: http://localhost/kursach/server/');
         }

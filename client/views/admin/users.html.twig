@@ -10,48 +10,208 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="../../client/assets/js/index.js"></script>
 </head>
-<body>
-    <h2>Users page</h2>
-    <table border="1">
-        <tr>
-            <th>User ID</th>
-            <th>First name</th>
-            <th>Second name</th>
-            <th>Last name</th>
-            <th>Phone</th>
-            <th>Email</th>
-            <th>Login</th>
-            <th>Password</th>
-            <th>Action</th>
-        </tr>
-        {% for user in users %}
-            <tr>
-                <td>{{ user.user_id }}</td>
-                <td>{{ user.firstName }}</td>
-                <td>{{ user.secondName }}</td>
-                <td>{{ user.lastName }}</td>
-                <td>{{ user.phone }}</td>
-                <td>{{ user.email }}</td>
-                <td>{{ user.login }}</td>
-                <td>{{ user.password }}</td>
-                {% if user.role_id == 3 %}
-                    <td>
-                        <form method="post" action="http://localhost/kursach/server/admin/changeUserRole">
-                            <input type="hidden" value="1" name="role_id">
-                            <input type="hidden" value="{{ user.user_id }}" name="user_id">
-                            <input type="submit" value="Give administrative privileges">
-                        </form>
-                    </td>
+<body style="background-color: white" class="bg-info">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="http://localhost/kursach/server">Aviasales</a>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="http://localhost/kursach/server/">Home</a>
+                    </li>
+
+
+                    {% if user_id %}
+
+                    {% if role_id == 1 %}
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="http://localhost/kursach/server/admin/main">Admin page</a>
+                        </li>
+                    {% endif %}
+
+                </ul>
+                <form class="d-flex">
+                    <i class="bi bi-person-circle form-control">{{ name }}</i>
+                </form>
+
+
+
+                <form style="margin-left: 5px" class="d-flex" method="post" action="http://localhost/kursach/server/user/profile">
+                    <input type="submit" class="btn btn-outline-dark" id="profileBtn" value="Profile">
+                </form>
+
+                <button style="margin-left: 5px; margin-bottom: 16px" class="btn btn-outline-dark" id="logoutBtn" onclick="checkLogout()">Logout</button>
+
                 {% else %}
-                    <td>
-                        <form method="post" action="http://localhost/kursach/server/admin/changeUserRole">
-                            <input type="hidden" value="3" name="role_id">
-                            <input type="hidden" value="{{ user.user_id }}" name="user_id">
-                            <input type="submit" value="Give default user privileges">
-                        </form>
-                    </td>
+                    </ul>
+                    <form class="d-flex" method="post" action="http://localhost/kursach/server/login">
+                        <input type="submit" class="btn btn-outline-dark" id="profileBtn" value="Login">
+                    </form>
+
+                    <form style="margin-left: 10px" class="d-flex" method="post" action="http://localhost/kursach/server/register">
+                        <input class="btn btn-outline-dark" type="submit" value="Register">
+                    </form>
                 {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <div id="confirmLogout" class="modal" tabindex="-1" role="dialog" style="display: none">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content bg-info">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirm your action</h5>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to leave your account?</p>
+                </div>
+                <div class="modal-footer">
+                    <form id="logoutForm" style="margin-left: 10px" class="d-flex" method="post" action="http://localhost/kursach/server/user/logout">
+                    </form>
+                    <button class="btn btn-primary bg-danger" style="margin-right: 2px" onclick="logoutUser()">Yes</button>
+                    <button class="btn btn-secondary bg-primary" data-dismiss="modal" style="margin-right: 180px" onclick="document.getElementById('confirmLogout').style.display = 'none';">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h2 style="margin-left: 800px">Users page</h2>
+        <table class="table table-dark table-hover table-bordered">
+            <tr>
+                <th>User ID</th>
+                <th>First name</th>
+                <th>Second name</th>
+                <th>Last name</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>Login</th>
+                <th>Password</th>
+                <th>Action</th>
             </tr>
-        {% endfor %}
-    </table>
+            {% for user in users %}
+                <tr>
+                    <td>{{ user.user_id }}</td>
+                    <td>{{ user.firstName }}</td>
+                    <td>{{ user.secondName }}</td>
+                    <td>{{ user.lastName }}</td>
+                    <td>{{ user.phone }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.login }}</td>
+                    <td>{{ user.password }}</td>
+                    {% if user.role_id == 3 %}
+                        <td>
+                            <form method="post" action="http://localhost/kursach/server/admin/changeUserRole">
+                                <input type="hidden" value="1" name="role_id">
+                                <input type="hidden" value="{{ user.user_id }}" name="user_id">
+                                <input type="submit" class="btn btn-warning" value="Give administrative privileges">
+                            </form>
+                        </td>
+                    {% else %}
+                        <td>
+                            <form method="post" action="http://localhost/kursach/server/admin/changeUserRole">
+                                <input type="hidden" value="3" name="role_id">
+                                <input type="hidden" value="{{ user.user_id }}" name="user_id">
+                                <input type="submit" class="btn btn-warning" value="Give default user privileges">
+                            </form>
+                        </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </table>
+
+    <footer class="text-center text-lg-start bg-primary text-dark" style="margin-top: -15px; height: 100%">
+        <!-- Section: Social media -->
+        <section class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom">
+            <!-- Left -->
+            <div class="me-5 d-none d-lg-block">
+                <h6 style="margin-left: 800px; padding-top: 20px" class="text-uppercase fw-bold mb-4">Additional info</h6>
+            </div>
+            <!-- Left -->
+        </section>
+        <!-- Section: Social media -->
+
+        <!-- Section: Links  -->
+        <section class="">
+            <div class="container text-center text-md-start mt-5">
+                <!-- Grid row -->
+                <div class="row mt-3">
+                    <!-- Grid column -->
+                    <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
+                        <!-- Content -->
+                        <h6 class="text-uppercase fw-bold mb-4">
+                            <i class="fas fa-gem me-3"></i>Company name
+                        </h6>
+                        <p>
+                            Aviasales is one of the best sites for searching and booking places for flights all around the world
+                        </p>
+                    </div>
+                    <!-- Grid column -->
+
+                    <!-- Grid column -->
+                    <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
+                        <!-- Links -->
+                        <h6 class="text-uppercase fw-bold mb-4">
+                            Products
+                        </h6>
+                        <p>
+                            <span class="text-reset">Laravel</span>
+                        </p>
+                        <p>
+                            <span class="text-reset">Symfony</span>
+                        </p>
+                        <p>
+                            <span class="text-reset">Zend</span>
+                        </p>
+                        <p>
+                            <span class="text-reset">Drupal</span>
+                        </p>
+                    </div>
+                    <!-- Grid column -->
+
+                    <!-- Grid column -->
+                    <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
+                        <!-- Links -->
+                        <h6 class="text-uppercase fw-bold mb-4">
+                            Useful links
+                        </h6>
+                        <p>
+                            <a href="https://developer.mozilla.org/en-US/" class="text-reset">MDN docs</a>
+                        </p>
+                        <p>
+                            <a href="https://www.php.net/docs.php" class="text-reset">PHP docs</a>
+                        </p>
+                        <p>
+                            <a href="https://dev.mysql.com/doc/" class="text-reset">MySQL docs</a>
+                        </p>
+                        <p>
+                            <a href="https://getbootstrap.com/docs/5.0/getting-started/introduction/" class="text-reset">Bootstrap docs</a>
+                        </p>
+                    </div>
+                    <!-- Grid column -->
+
+                    <!-- Grid column -->
+                    <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
+                        <!-- Links -->
+                        <h6 class="text-uppercase fw-bold mb-4">Contact</h6>
+                        <p><i class="fas fa-home me-3"></i> New York, NY 10012, US</p>
+                        <p>
+                            <i class="fas fa-envelope me-3"></i>
+                            aviasales@enterprise.com
+                        </p>
+                        <p><i class="fas fa-phone me-3"></i> + 01 234 567 88</p>
+                        <p><i class="fas fa-print me-3"></i> + 01 234 567 89</p>
+                    </div>
+                    <!-- Grid column -->
+                </div>
+                <!-- Grid row -->
+            </div>
+        </section>
+        <!-- Section: Links  -->
+
+        <!-- Copyright -->
+        <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
+            © 2023 Copyright: Aviasales.com
+        </div>
+        <!-- Copyright -->
+    </footer>
 </body>

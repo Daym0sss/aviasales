@@ -10,15 +10,225 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="../../client/assets/js/index.js"></script>
 </head>
-<body>
-    <h2>Welcome to admin page</h2>
+<body style="background-color: white">
 
-    <form method="post" action="http://localhost/kursach/server/admin/trips">
-        <input type="submit" value="Manage trips">
-    </form>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="http://localhost/kursach/server">Aviasales</a>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="http://localhost/kursach/server/">Home</a>
+                    </li>
 
-    <form method="post" action="http://localhost/kursach/server/admin/users">
-        <input type="submit" value="Manage users">
-    </form>
+
+                    {% if user_id %}
+
+                    {% if role_id == 1 %}
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="http://localhost/kursach/server/admin/main">Admin page</a>
+                        </li>
+                    {% endif %}
+
+                </ul>
+                <form class="d-flex">
+                    <i class="bi bi-person-circle form-control">{{ name }}</i>
+                </form>
+
+
+
+                <form style="margin-left: 5px" class="d-flex" method="post" action="http://localhost/kursach/server/user/profile">
+                    <input type="submit" class="btn btn-outline-dark" id="profileBtn" value="Profile">
+                </form>
+
+                <button style="margin-left: 5px; margin-bottom: 16px" class="btn btn-outline-dark" id="logoutBtn" onclick="checkLogout()">Logout</button>
+
+                {% else %}
+                    </ul>
+                    <form class="d-flex" method="post" action="http://localhost/kursach/server/login">
+                        <input type="submit" class="btn btn-outline-dark" id="profileBtn" value="Login">
+                    </form>
+
+                    <form style="margin-left: 10px" class="d-flex" method="post" action="http://localhost/kursach/server/register">
+                        <input class="btn btn-outline-dark" type="submit" value="Register">
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <div id="confirmLogout" class="modal" tabindex="-1" role="dialog" style="display: none">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content bg-info">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirm your action</h5>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to leave your account?</p>
+                </div>
+                <div class="modal-footer">
+                    <form id="logoutForm" style="margin-left: 10px" class="d-flex" method="post" action="http://localhost/kursach/server/user/logout">
+                    </form>
+                    <button class="btn btn-primary bg-danger" style="margin-right: 2px" onclick="logoutUser()">Yes</button>
+                    <button class="btn btn-secondary bg-primary" data-dismiss="modal" style="margin-right: 180px" onclick="document.getElementById('confirmLogout').style.display = 'none';">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="background-image: url('http://localhost/kursach/client/images/planes.png'); height: 600px">
+        <section class="vh-100 gradient-custom" style="margin-top: -120px">
+            <div class="container py-5 h-100">
+                <div class="row d-flex justify-content-center align-items-center h-100">
+                    <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                        <div class="card bg-dark text-white" style="border-radius: 1rem;margin-top: -260px">
+                            <h2 class="fw-bold mb-2" style="margin-left: 110px">Choose your action:</h2>
+
+                            <form method="post" action="http://localhost/kursach/server/admin/trips" style="margin-left: 700px" class="card-body p-5 text-center">
+                                <button class="btn btn-outline-light btn-lg px-5" type="submit" style="margin-left: -950px;">Manage trips</button>
+                            </form>
+
+                            <form method="post" action="http://localhost/kursach/server/admin/users" style="margin-left: 860px; margin-top: -55px">
+                                <button class="btn btn-outline-light btn-lg px-5" type="submit" style="margin-left: -698px">Manage users</button>
+                            </form>
+
+                            <!-- <form class="card-body p-5 text-center" method="post" action="http://localhost/kursach/server/user/login" onsubmit="loginUser(event)">
+
+                                <div class="mb-md-5 mt-md-4 pb-5">
+
+                                    <h2 class="fw-bold mb-2 text-uppercase">Sign in</h2>
+                                    <p class="text-white-50 mb-5">Please enter your login and password!</p>
+
+                                    <div class="form-outline form-white mb-4">
+                                        <input type="text" id="typeEmailX" class="form-control form-control-lg" name="login" required/>
+                                        <label class="form-label" for="typeEmailX">Login</label>
+                                    </div>
+
+                                    <div class="form-outline form-white mb-4">
+                                        <input type="password" id="typePasswordX" class="form-control form-control-lg" name="password" required/>
+                                        <label class="form-label" for="typePasswordX">Password</label>
+                                    </div>
+
+                                    <button class="btn btn-outline-light btn-lg px-5" type="submit">Login</button>
+
+                                    <div class="d-flex justify-content-center text-center mt-4 pt-1">
+                                        <a href="#!" class="text-white"><i class="fab fa-facebook-f fa-lg"></i></a>
+                                        <a href="#!" class="text-white"><i class="fab fa-twitter fa-lg mx-4 px-2"></i></a>
+                                        <a href="#!" class="text-white"><i class="fab fa-google fa-lg"></i></a>
+                                    </div>
+
+                                </div>
+
+                                <div>
+                                    <p class="mb-0">Don't have an account? <a href="http://localhost/kursach/server/register" class="text-white-50 fw-bold">Register</a>
+                                    </p>
+                                </div>
+
+                            </form> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+
+
+
+    <footer class="text-center text-lg-start bg-primary text-dark" style="margin-top: 0px">
+        <!-- Section: Social media -->
+        <section class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom">
+            <!-- Left -->
+            <div class="me-5 d-none d-lg-block">
+                <h6 style="margin-left: 800px; padding-top: 20px" class="text-uppercase fw-bold mb-4">Additional info</h6>
+            </div>
+            <!-- Left -->
+        </section>
+        <!-- Section: Social media -->
+
+        <!-- Section: Links  -->
+        <section class="">
+            <div class="container text-center text-md-start mt-5">
+                <!-- Grid row -->
+                <div class="row mt-3">
+                    <!-- Grid column -->
+                    <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
+                        <!-- Content -->
+                        <h6 class="text-uppercase fw-bold mb-4">
+                            <i class="fas fa-gem me-3"></i>Company name
+                        </h6>
+                        <p>
+                            Aviasales is one of the best sites for searching and booking places for flights all around the world
+                        </p>
+                    </div>
+                    <!-- Grid column -->
+
+                    <!-- Grid column -->
+                    <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
+                        <!-- Links -->
+                        <h6 class="text-uppercase fw-bold mb-4">
+                            Products
+                        </h6>
+                        <p>
+                            <span class="text-reset">Laravel</span>
+                        </p>
+                        <p>
+                            <span class="text-reset">Symfony</span>
+                        </p>
+                        <p>
+                            <span class="text-reset">Zend</span>
+                        </p>
+                        <p>
+                            <span class="text-reset">Drupal</span>
+                        </p>
+                    </div>
+                    <!-- Grid column -->
+
+                    <!-- Grid column -->
+                    <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
+                        <!-- Links -->
+                        <h6 class="text-uppercase fw-bold mb-4">
+                            Useful links
+                        </h6>
+                        <p>
+                            <a href="https://developer.mozilla.org/en-US/" class="text-reset">MDN docs</a>
+                        </p>
+                        <p>
+                            <a href="https://www.php.net/docs.php" class="text-reset">PHP docs</a>
+                        </p>
+                        <p>
+                            <a href="https://dev.mysql.com/doc/" class="text-reset">MySQL docs</a>
+                        </p>
+                        <p>
+                            <a href="https://getbootstrap.com/docs/5.0/getting-started/introduction/" class="text-reset">Bootstrap docs</a>
+                        </p>
+                    </div>
+                    <!-- Grid column -->
+
+                    <!-- Grid column -->
+                    <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
+                        <!-- Links -->
+                        <h6 class="text-uppercase fw-bold mb-4">Contact</h6>
+                        <p><i class="fas fa-home me-3"></i> New York, NY 10012, US</p>
+                        <p>
+                            <i class="fas fa-envelope me-3"></i>
+                            aviasales@enterprise.com
+                        </p>
+                        <p><i class="fas fa-phone me-3"></i> + 01 234 567 88</p>
+                        <p><i class="fas fa-print me-3"></i> + 01 234 567 89</p>
+                    </div>
+                    <!-- Grid column -->
+                </div>
+                <!-- Grid row -->
+            </div>
+        </section>
+        <!-- Section: Links  -->
+
+        <!-- Copyright -->
+        <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
+            © 2023 Copyright: Aviasales.com
+        </div>
+        <!-- Copyright -->
+    </footer>
 </body>
 </html>

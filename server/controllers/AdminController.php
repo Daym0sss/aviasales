@@ -17,11 +17,14 @@ class AdminController
         {
             if (User::has_access($_SESSION['user_id']))
             {
+                $role_id = User::getUserById($_SESSION['user_id'])['role_id'];
                 $loader = new FilesystemLoader($_SERVER['DOCUMENT_ROOT'] . '/kursach/client/views/admin');
                 $twig = new Environment($loader);
                 $template = $twig->load('main.html.twig');
                 echo $template->render([
-
+                    'user_id' => isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null,
+                    'name' => isset($_SESSION['name']) ? $_SESSION['name'] : null,
+                    'role_id' => $role_id
                 ]);
             }
             else
@@ -48,7 +51,10 @@ class AdminController
                 $twig = new Environment($loader);
                 $template = $twig->load('trips.html.twig');
                 echo $template->render([
-                    'trips' => $trips
+                    'trips' => $trips,
+                    'user_id' => $_SESSION['user_id'],
+                    'name' => $_SESSION['name'],
+                    'role_id' => 1
                 ]);
             }
             else
@@ -102,8 +108,15 @@ class AdminController
         {
             if (User::has_access($_SESSION['user_id']))
             {
-                Trip::addTrip($_POST);
-                header('Location: http://localhost/kursach/server/admin/trips');
+                if ($_SERVER["REQUEST_METHOD"] == "POST")
+                {
+                    Trip::addTrip($_POST);
+                    header('Location: http://localhost/kursach/server/admin/trips');
+                }
+                else
+                {
+                    header('Location: http://localhost/kursach/server/admin/main');
+                }
             }
             else
             {
@@ -129,8 +142,15 @@ class AdminController
         {
             if (User::has_access($_SESSION['user_id']))
             {
-                Trip::deleteTrip($_POST['trip_id']);
-                header('Location: http://localhost/kursach/server/admin/trips');
+                if ($_SERVER["REQUEST_METHOD"] == "POST")
+                {
+                    Trip::deleteTrip($_POST['trip_id']);
+                    header('Location: http://localhost/kursach/server/admin/trips');
+                }
+                else
+                {
+                    header('Location: http://localhost/kursach/server/admin/main');
+                }
             }
             else
             {
@@ -156,13 +176,24 @@ class AdminController
         {
             if (User::has_access($_SESSION['user_id']))
             {
-                $trip = Trip::getTrip($_POST['trip_id']);
-                $loader = new FilesystemLoader($_SERVER['DOCUMENT_ROOT'] . '/kursach/client/views/admin');
-                $twig = new Environment($loader);
-                $template = $twig->load('editTrip.html.twig');
-                echo $template->render([
-                    'trip' => $trip
-                ]);
+                if ($_SERVER["REQUEST_METHOD"] == "POST")
+                {
+                    $trip = Trip::getTrip($_POST['trip_id']);
+                    $loader = new FilesystemLoader($_SERVER['DOCUMENT_ROOT'] . '/kursach/client/views/admin');
+                    $twig = new Environment($loader);
+                    $template = $twig->load('editTrip.html.twig');
+                    echo $template->render([
+                        'trip' => $trip,
+                        'user_id' => $_SESSION['user_id'],
+                        'name' => $_SESSION['name'],
+                        'role_id' => 1
+                    ]);
+                }
+                else
+                {
+                    header('Location: http://localhost/kursach/server/admin/main');
+                }
+
             }
             else
             {
@@ -205,8 +236,15 @@ class AdminController
         {
             if (User::has_access($_SESSION['user_id']))
             {
-                Trip::updateTrip($_POST);
-                header('Location: http://localhost/kursach/server/admin/trips');
+                if ($_SERVER["REQUEST_METHOD"] == "POST")
+                {
+                    Trip::updateTrip($_POST);
+                    header('Location: http://localhost/kursach/server/admin/trips');
+                }
+                else
+                {
+                    header('Location: http://localhost/kursach/server/admin/main');
+                }
             }
             else
             {
@@ -232,7 +270,10 @@ class AdminController
                 $twig = new Environment($loader);
                 $template = $twig->load('users.html.twig');
                 echo $template->render([
-                    'users' => $users
+                    'users' => $users,
+                    'user_id' => $_SESSION['user_id'],
+                    'name' => $_SESSION['name'],
+                    'role_id' => 1
                 ]);
             }
             else
@@ -260,8 +301,16 @@ class AdminController
         {
             if (User::has_access($_SESSION['user_id']))
             {
-                User::changeRole($_POST);
-                header('Location: http://localhost/kursach/server/admin/users');
+                if ($_SERVER["REQUEST_METHOD"] == "POST")
+                {
+                    User::changeRole($_POST);
+                    header('Location: http://localhost/kursach/server/admin/users');
+                }
+                else
+                {
+                    header('Location: http://localhost/kursach/server/admin/main');
+                }
+
             }
             else
             {
