@@ -103,22 +103,15 @@ class UserController
         {
             $role_id = null;
         }
-        if ($_SERVER["REQUEST_METHOD"] == "POST")
-        {
-            $loader = new FilesystemLoader($_SERVER['DOCUMENT_ROOT'] . '/kursach/client/views/user');
-            $twig = new Environment($loader);
-            $template = $twig->load('login.html.twig');
-            echo $template->render([
-                'user_id' => isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null,
-                'name' => isset($_SESSION['name']) ? $_SESSION['name'] : null,
-                'role_id' => $role_id
-            ]);
-            session_write_close();
-        }
-        else
-        {
-            header('Location: http://localhost/kursach/server/');
-        }
+        $loader = new FilesystemLoader($_SERVER['DOCUMENT_ROOT'] . '/kursach/client/views/user');
+        $twig = new Environment($loader);
+        $template = $twig->load('login.html.twig');
+        echo $template->render([
+            'user_id' => isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null,
+            'name' => isset($_SESSION['name']) ? $_SESSION['name'] : null,
+            'role_id' => $role_id
+        ]);
+        session_write_close();
     }
 
     public function getRegisterPage()
